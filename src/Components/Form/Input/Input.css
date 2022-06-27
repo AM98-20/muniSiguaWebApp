@@ -1,0 +1,72 @@
+.primary_input {
+    display: flex;
+    flex-direction: column;
+}
+
+.primary_input input {
+    margin-top: .5rem;
+}
+
+.secondary_input {
+    display: flex;
+}
+
+.secondary_input label {
+    height: 30px;
+    vertical-align: middle;
+}
+
+.secondary_input div {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.modern_input {
+    width: 100%;
+    background-color: #f0f0f0;
+    height: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.modern_input input {
+    width: 95%;
+    margin: 5px 10px;
+    background: none;
+    outline: none;
+    border: none;
+    line-height: 1;
+    font-weight: 100;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.modern_input input::placeholder {
+    color: #aaa;
+    font-weight: 500;
+}
+
+.modern_input div {
+    display: flex;
+    flex-direction: column;
+}
+
+.custom_input input {
+    border-radius: .2rem;
+    font-size: 1rem;
+    padding: .2rem .4rem;
+}
+
+.custom_input .field_info {
+    font-size: .7rem;
+    color: #777;
+}
+
+.custom_input .field_error {
+    font-size: .7rem;
+    color: #df4e4e;
+}
