@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import { Icon } from '@iconify/react';
@@ -8,10 +8,10 @@ const Navbar = () => {
     const [open, setOpen] = useState(false);
 
     const [hideNav, setHideNav] = useState(['']);
-    const [hideA, setHideA] = useState(['hideA']);
-    const [hideB, setHideB] = useState(['hideA']);
-    const [accordionOpenA, setAccordionOpenA] = useState(true);
-    const [accordionOpenB, setAccordionOpenB] = useState(true);
+    const [hideA, setHideA] = useState(['']);
+    const [hideB, setHideB] = useState(['']);
+    const [accordionOpenA, setAccordionOpenA] = useState(false);
+    const [accordionOpenB, setAccordionOpenB] = useState(false);
 
     const menuId = "main-menu";
 
@@ -23,19 +23,44 @@ const Navbar = () => {
     const toggleAccordionA = () => {
         setAccordionOpenA(!accordionOpenA);
         setHideA(accordionOpenA ? [""] : ["hideA"]);
-        if (!accordionOpenB) {
-            setAccordionOpenB(!accordionOpenB);
-            setHideB(accordionOpenB ? [""] : ["hideA"]);
+        if (accordionOpenB) {
+            setAccordionOpenB(false);
+            setHideB(['hideA']);
         }
     }
     const toggleAccordionB = () => {
         setAccordionOpenB(!accordionOpenB);
         setHideB(accordionOpenB ? [""] : ["hideA"]);
-        if (!accordionOpenA) {
-            setAccordionOpenA(!accordionOpenA);
-            setHideA(accordionOpenA ? [""] : ["hideA"]);
+        if (accordionOpenA) {
+            setAccordionOpenA(false);
+            setHideA(['hideA']);
         }
     }
+    const openA = () => {
+        setAccordionOpenA(true);
+        setHideA([""]);
+    }
+
+    const closeA = () => {
+        setAccordionOpenA(false);
+        setHideA(["hideA"]);
+    }
+    const openB = () => {
+        setAccordionOpenB(true);
+        setHideB([""]);
+    }
+
+    const closeB = () => {
+        setAccordionOpenB(false);
+        setHideB(["hideA"]);
+    }
+
+    useEffect(() => {
+        setHideA(['hideA']);
+        setHideB(['hideA']);
+        setAccordionOpenA(false);
+        setAccordionOpenB(false);
+    }, []);
 
     return (
         <>
@@ -50,7 +75,7 @@ const Navbar = () => {
                         </div>
                     </NavLink>
                     <div className='tst'>
-                        <li className='li label' onClick={toggleAccordionA} onMouseEnter={toggleAccordionA}>
+                        <li className='li label' onClick={toggleAccordionA} onMouseEnter={openA} onMouseLeave={closeA}>
                             <div className='labels'>
                                 <Icon className="icon" icon="bxs:home" width="25" />
                                 <span>Alcaldía</span>
@@ -73,7 +98,7 @@ const Navbar = () => {
                         </div>
                     </NavLink>
                     <div className='tst'>
-                        <li className='li label' onClick={toggleAccordionB} onMouseEnter={toggleAccordionB} >
+                        <li className='li label' onClick={toggleAccordionB} onMouseEnter={openB} onMouseLeave={closeB}>
                             <div className='labels'>
                                 <Icon className="icon" icon="bxs:home" width="25" />
                                 <span>Turismo</span>
@@ -96,7 +121,7 @@ const Navbar = () => {
                 </ul>
                 <ul className='toggle' >
                     <div className='hamburger' onClick={toggleHamburger}>
-                        <Burger open={open} setOpen={setOpen} aria-controls={menuId}  />
+                        <Burger open={open} setOpen={setOpen} aria-controls={menuId} />
                     </div>
                 </ul>
             </nav>

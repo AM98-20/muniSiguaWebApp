@@ -1,0 +1,61 @@
+.input-field_signup {
+    max-width: 380px;
+    margin: 1rem;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 15% 85%;
+}
+
+.input-field_signup .i {
+    color: #454545;
+}
+
+a {
+    text-decoration: none;
+}
+
+button.btn_form {
+    margin-top: 2rem;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}
+
+.cmb {
+    max-width: 400px;
+    margin-top: 2rem;
+}
+
+.stck {
+    margin-top: 1rem;
+}
+
+@media (min-width:480px) {
+    .main_section {
+        margin-top: 3rem;
+        margin-left: 10rem;
+    }
+}
+
+@media (min-width:780px) {
+    .form {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+    }
+    .child {
+        flex: 1 1 50%;
+    }
+    .txtField {
+        width: 100%;
+    }
+    .stck {
+        justify-content: center;
+        margin-left: 3rem;
+        flex: 1 1 100%;
+    }
+    .btn_mn {
+        display: contents;
+        flex: 1 1 100%;
+        justify-self: center;
+    }
+}

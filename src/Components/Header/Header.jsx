@@ -1,20 +1,11 @@
 import React from 'react';
 import './Header.css';
-import { useContext } from 'react';
 import { Icon } from '@iconify/react';
-import AuthContext from '../../Context/AuthProvider';
-import { useNavigate } from 'react-router-dom';
-import { SecondaryButton } from '../Form/Button/Button';
+import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
+import { Button } from '@mui/material';
 
 const Header = () => {
-    const { auth, setAuth } = useContext(AuthContext);
-    const navigate = useNavigate();
-
-    const logout = () => {
-        setAuth({});
-        navigate('/login');
-    }
 
     return (
         <>
@@ -31,34 +22,20 @@ const Header = () => {
                         <img className='only_small' src="/logo.png" alt="logo" />
                     </div>
                     <div className="header_right">
-                        {
-                            auth.user ? (
-                                <>
-                                    <button type='button' className='login_button' onClick={() => navigate(`/profile/${auth.user._id}`)}>
-                                        <span className="only_large">{auth.user.username.split(' ')[0]}</span>
-                                        <span className='only_small login_btn_text'>
-                                            <Icon color='#fff' icon="uil:signin" />
-                                        </span>
-                                    </button>
-                                    <SecondaryButton onClick={logout}>
-                                        Cerrar Sesión
-                                    </SecondaryButton>
-                                </>
-                            ) : (
-                                <button type='button' className='login_button' onClick={() => navigate('/login')}>
-                                    <span className="only_large">Iniciar Sesión</span>
-                                    <span className='only_small login_btn_text'>
-                                        <Icon color='#fff' icon="uil:signin" />
-                                    </span>
-                                </button>
-                            )
-                        }
+                        <NavLink to="admin">
+                            <Button variant="contained" color="success" className='login_button' >
+                                <span className="only_large">Iniciar Sesión</span>
+                                <span className='only_small login_btn_text'>
+                                    <Icon color='#fff' icon="uil:signin" />
+                                </span>
+                            </Button>
+                        </NavLink>
                     </div>
                 </div>
             </div>
             <div className='navbar'>
                 <div className='bloque'>
-                    <Navbar className="navbar"/>
+                    <Navbar className="navbar" />
                 </div>
             </div>
         </>

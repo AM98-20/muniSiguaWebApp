@@ -2,23 +2,24 @@ import { Icon } from '@iconify/react';
 import React, { useState } from 'react';
 import Burger from '../Burger/Burger';
 import './HeaderNav.css';
+import { NavLink } from 'react-router-dom';
 
-const HeaderNav = () => {
+const HeaderNav = ({Title}) => {
     const [open, setOpen] = useState(false);
-    const [hideNav, setHideNav] = useState(['hide']);
+    const [hideNav, setHideNav] = useState(['hide_admin']);
     const menuId = "main-menu";
     const toggleHamburger = () => {
         setOpen(!open);
-        setHideNav(open ? ["hide"] : ["show"]);
+        setHideNav(open ? ["hide_admin"] : ["show_admin"]);
     }
 
     return (
-        <div>
+        <div className='full_hdr'>
             <div className="dashboard-header">
-                <Burger className='burgerNav' open={open} setOpen={setOpen} aria-controls={menuId} onClick={toggleHamburger} />
-                <h1>Dashboard </h1>
-                {/* <Image className="rnp-logo" src="/img/rnp-logo.png" alt="rnp logo"> */}
-                <div>
+                <div className='head_header'>
+                    <Burger className='burgerNav' open={open} setOpen={setOpen} aria-controls={menuId} onClick={toggleHamburger} />
+                    <h1>{Title}</h1>
+                    {/* <Image className="rnp-logo" src="/img/rnp-logo.png" alt="rnp logo"> */}
                 </div>
                 <nav className={["dashboard-nav", ...hideNav].join(' ')} >
                     <div className="user-img">
@@ -29,22 +30,28 @@ const HeaderNav = () => {
                     </div>
                     <ul className="dash-nav-items">
                         <li className="dash-nav-item">
-                            <a href="/dashboard/registrados" className="dash-nav-link {{ session('activeDash') === 'Registrados' ? 'active-dash' : null }}">
-                                <Icon icon="bi:person-badge" />
+                            <NavLink to="/admin" end className={({ isActive }) => (isActive ? "active-dash" : "") + " dash-nav-link "}>
+                                <Icon className='iconify' icon="ic:outline-space-dashboard" />
+                                <span>Dashboard</span>
+                            </NavLink>
+                        </li>
+                        <li className="dash-nav-item">
+                            <NavLink to="/admin/news" className={({ isActive }) => (isActive ? "active-dash" : "") + " dash-nav-link "}>
+                                <Icon className='iconify' icon="bi:person-badge" />
                                 <span>Noticias</span>
-                            </a>
+                            </NavLink>
                         </li>
                         <li className="dash-nav-item">
-                            <a href="/dashboard/colaboradores" className="dash-nav-link {{ session('activeDash') === 'Colaboradores' ? 'active-dash' : null }}">
-                                <Icon icon="ant-design:file-search-outlined" />
+                            <NavLink to="/admin/events" className={({ isActive }) => (isActive ? "active-dash" : "") + " dash-nav-link "}>
+                                <Icon className='iconify' icon="ant-design:file-search-outlined" />
                                 <span>Eventos</span>
-                            </a>
+                            </NavLink>
                         </li>
                         <li className="dash-nav-item">
-                            <a href="/dashboard/colaboradores" className="dash-nav-link {{ session('activeDash') === 'Colaboradores' ? 'active-dash' : null }}">
-                                <Icon icon="la:users" />
+                            <NavLink to="/admin/users" className={({ isActive }) => (isActive ? "active-dash" : "") + " dash-nav-link "}>
+                                <Icon className='iconify' icon="la:users" />
                                 <span>Usuarios</span>
-                            </a>
+                            </NavLink>
                         </li>
                     </ul>
                     <div className="dashboard-logout-section">

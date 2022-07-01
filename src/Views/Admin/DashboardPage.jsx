@@ -6,7 +6,7 @@ import AdminPage from '../../Components/Page/AdminPage'
 const DashboardPage = () => {
   return (
     <AdminPage
-      header={<HeaderNav />}
+      header={<HeaderNav Title="Dashboard" />}
     >
       <Dashboard />
     </AdminPage>

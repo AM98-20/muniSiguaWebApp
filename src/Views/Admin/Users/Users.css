@@ -1,12 +1,9 @@
-.mid {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: center;
+button.btnAdd {
+    margin-bottom: 1rem;
 }
 
-.tstng {
-    display: none;
+.link-nav {
+    text-decoration: none;
 }
 
 .icons-a {
@@ -22,7 +19,7 @@
 }
 
 @media (min-width:480px) {
-    .mid {
+    .usr_main {
         margin-top: 3rem;
         margin-left: 10rem;
     }

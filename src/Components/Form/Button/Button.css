@@ -14,3 +14,7 @@
 .button_secondary {
     background-color: #df4e4e;
 }
+
+.button_base:hover {
+    background-color: #333;
+}
