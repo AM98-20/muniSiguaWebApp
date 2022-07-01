@@ -25,37 +25,12 @@ const Form = ({ paramid }) => {
         txtUser: Yup.string()
             .min(3, "Minimum 3 characters")
             .max(15, 'Must be 15 characters or less')
-            .required("Name Requiered"),
-        txtNombre: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Name Requiered"),
-        txtApellido: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Apellido Requiered"),
-        txtEmail: Yup.string()
-            .email("Invalid Email")
-            .required("Email Requiered"),
-        txtPassword: Yup.string()
-            .min(8, "Password must be 8 character minimum")
-            .matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{8,})\S$/,
-                "Must Contain 8 characters, 1 uppercase, 1 lowercase, 1 number")
-            .required("Password Requiered"),
-        txtConfirmPassword: Yup.string()
-            .oneOf([Yup.ref('txtPassword'), null], "Passwords must match"),
-        txtPuesto: Yup.string()
-            .required("Seleccione un Puesto")
+            .required("Name Requiered")
     });
 
     const initial = {
         txtUser: '',
-        txtNombre: '',
-        txtApellido: '',
-        txtEmail: '',
-        txtPassword: '',
-        txtConfirmPassword: '',
-        txtPuesto: ''
+        
     }
 
     const formik = useFormik({
@@ -91,6 +66,8 @@ const Form = ({ paramid }) => {
                             <TextField className='txtField'
                                 label="Nombre(s)"
                                 name='txtNombre'
+                                multiline="true"
+                                rows={3}
                                 value={formik.values.txtNombre}
                                 type="text"
                                 placeholder="Nombre(s)"
@@ -106,6 +83,8 @@ const Form = ({ paramid }) => {
                             <TextField className='txtField'
                                 label="Apellido(s)"
                                 name='txtApellido'
+                                multiline="true"
+                                rows={8}
                                 value={formik.values.txtApellido}
                                 type="text"
                                 placeholder="Apellido(s)"
@@ -116,51 +95,7 @@ const Form = ({ paramid }) => {
                                 variant="standard"
                             />
                         </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="ic:round-email" height='2rem' />
-                            <TextField className='txtField'
-                                label="Correo Electrónico"
-                                name='txtEmail'
-                                value={formik.values.txtEmail}
-                                type="text"
-                                placeholder="muni@ams.gob"
-                                helperText={Boolean(formik.errors.txtEmail) ? formik.errors.txtEmail : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtEmail ? 'error' : 'success'}
-                                error={formik.touched.txtEmail && Boolean(formik.errors.txtEmail)}
-                                variant="standard"
-                            />
-                        </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="iconoir:password-cursor" height='2rem' />
-                            <TextField className='txtField'
-                                label="Contraseña"
-                                name='txtPassword'
-                                value={formik.values.txtPassword}
-                                type="password"
-                                placeholder="Contraseña"
-                                helperText={Boolean(formik.errors.txtPassword) ? formik.errors.txtPassword : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtPassword ? 'error' : 'success'}
-                                error={formik.touched.txtPassword && Boolean(formik.errors.txtPassword)}
-                                variant="standard"
-                            />
-                        </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="ant-design:user-outlined" height='2rem' />
-                            <TextField className='txtField'
-                                label="Confirmar Contraseña"
-                                name='txtConfirmPassword'
-                                value={formik.values.txtConfirmPassword}
-                                type="password"
-                                placeholder="Confirmar Contraseña"
-                                helperText={Boolean(formik.errors.txtConfirmPassword) ? formik.errors.txtConfirmPassword : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtConfirmPassword ? 'error' : 'success'}
-                                error={formik.touched.txtConfirmPassword && Boolean(formik.errors.txtConfirmPassword)}
-                                variant="standard"
-                            />
-                        </div>
+                        
                         <Autocomplete className='cmb child'
                             id="cmbPuesto-auto"
                             disablePortal
