@@ -1,61 +1,87 @@
-import React from 'react';
-import { TextField, Autocomplete, Button, Switch, Typography, Stack } from '@mui/material';
+import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { TextField, Button } from '@mui/material';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
 import { NavLink } from 'react-router-dom';
 
-function createData(id, label) {
-    return { label, id };
-}
-
-const options = [
-    createData(1, "Administrador"),
-    createData(2, "Editor"),
-];
+import ErrorBoundary from '../../Error/ErrorBoundary';
 
 const Form = ({ paramid }) => {
+    const [mainUrl, setMainUrl] = useState([]);
+    const [mainImg, setMainImg] = useState([]);
+    const [fileUrl, setFileUrl] = useState([]);
+    const [image, setImage] = useState([]);
     let id = paramid;
     if (id) {
 
     }
 
+    // useEffect(() => {
+    //   setFileUrl();
+    //   setImage();
+    // }, [fileUrl, image])
+
+    const handleRemove = (item) => {
+        if (item !== -1) {
+            fileUrl.splice(item, 1);
+            image.splice(item, 1);
+            const array1 = fileUrl;
+            const array2 = image;
+            setFileUrl(array1);
+            setImage(array2);
+        }
+    }
+
+    const handleMain = (e) => {
+        if (e.target.files) {
+            const imgArray = e.target.files[0];
+            const fileArray = URL.createObjectURL(e.target.files[0]);
+            setMainImg(imgArray);
+            setMainUrl(fileArray);
+            console.log(mainImg);
+        }
+    }
+
+    const handleChange = (e) => {
+        if (e.target.files) {
+            const imgArray = Array.from(e.target.files).map((file) => file);
+            const fileArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            setImage((prevImg) => prevImg.concat(imgArray));
+            setFileUrl((prevUrls) => prevUrls.concat(fileArray));
+            console.log(image);
+            console.log(fileUrl);
+
+        }
+    }
+
+    const renderImages = (source) => {
+        return source.map((url, i) => {
+            return <div className='main_display'>
+                <Button key={i} className='btn_dlt' variant='contained' color='secondary' onClick={() => handleRemove(i)} ><Icon icon='line-md:cancel-twotone' height='0.8rem' /></Button>
+                <img style={{ height: '5rem' }} src={url} key={url} alt={url} />
+            </div>
+        })
+    }
+
     const validation = Yup.object({
-        txtUser: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Name Requiered"),
-        txtNombre: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Name Requiered"),
-        txtApellido: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Apellido Requiered"),
-        txtEmail: Yup.string()
-            .email("Invalid Email")
-            .required("Email Requiered"),
-        txtPassword: Yup.string()
-            .min(8, "Password must be 8 character minimum")
-            .matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{8,})\S$/,
-                "Must Contain 8 characters, 1 uppercase, 1 lowercase, 1 number")
-            .required("Password Requiered"),
-        txtConfirmPassword: Yup.string()
-            .oneOf([Yup.ref('txtPassword'), null], "Passwords must match"),
-        txtPuesto: Yup.string()
-            .required("Seleccione un Puesto")
+        txtTitular: Yup.string()
+            .min(3, "Mínimo 3 caracteres para el Titular")
+            .max(30, 'Máximo 30 caracteres para este campo')
+            .required("Este campo es requerido"),
+        txtDesc: Yup.string()
+            .max(45, 'Máximo 45 caracteres para este campo')
+            .required("Este campo es requerido"),
+        txtNoticia: Yup.string()
+            .max(1000, 'Máximo 1000 caracteres para este campo')
+            .required("Este campo es requerido"),
     });
 
     const initial = {
-        txtUser: '',
-        txtNombre: '',
-        txtApellido: '',
-        txtEmail: '',
-        txtPassword: '',
-        txtConfirmPassword: '',
-        txtPuesto: ''
+        txtTitular: '',
+        txtDesc: '',
+        txtNoticia: ''
     }
 
     const formik = useFormik({
@@ -63,6 +89,8 @@ const Form = ({ paramid }) => {
         validationSchema: validation,
         onSubmit: (values) => {
             alert(JSON.stringify(values, null, 2));
+            console.log(image);
+            console.log(fileUrl);
         },
     });
 
@@ -70,124 +98,91 @@ const Form = ({ paramid }) => {
         <>
             {id &&
                 <div className='main_section'>
-                    <form className='form' onSubmit={formik.handleSubmit}>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="ant-design:user-outlined" height='2rem' />
-                            <TextField className='txtField'
-                                label="Usuario"
-                                name='txtUser'
-                                value={formik.values.txtUser}
-                                type="text"
-                                placeholder="Usuario"
-                                helperText={Boolean(formik.errors.txtUser) ? formik.errors.txtUser : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtUser ? 'error' : 'success'}
-                                error={formik.touched.txtUser && Boolean(formik.errors.txtUser)}
-                                variant="standard"
-                            />
-                        </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="icon-park-outline:edit-name" height='2rem' />
-                            <TextField className='txtField'
-                                label="Nombre(s)"
-                                name='txtNombre'
-                                value={formik.values.txtNombre}
-                                type="text"
-                                placeholder="Nombre(s)"
-                                helperText={Boolean(formik.errors.txtNombre) ? formik.errors.txtNombre : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtNombre ? 'error' : 'success'}
-                                error={formik.touched.txtNombre && Boolean(formik.errors.txtNombre)}
-                                variant="standard"
-                            />
-                        </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="" height='2rem' />
-                            <TextField className='txtField'
-                                label="Apellido(s)"
-                                name='txtApellido'
-                                value={formik.values.txtApellido}
-                                type="text"
-                                placeholder="Apellido(s)"
-                                helperText={Boolean(formik.errors.txtApellido) ? formik.errors.txtApellido : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtApellido ? 'error' : 'success'}
-                                error={formik.touched.txtApellido && Boolean(formik.errors.txtApellido)}
-                                variant="standard"
-                            />
-                        </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="ic:round-email" height='2rem' />
-                            <TextField className='txtField'
-                                label="Correo Electrónico"
-                                name='txtEmail'
-                                value={formik.values.txtEmail}
-                                type="text"
-                                placeholder="muni@ams.gob"
-                                helperText={Boolean(formik.errors.txtEmail) ? formik.errors.txtEmail : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtEmail ? 'error' : 'success'}
-                                error={formik.touched.txtEmail && Boolean(formik.errors.txtEmail)}
-                                variant="standard"
-                            />
-                        </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="iconoir:password-cursor" height='2rem' />
-                            <TextField className='txtField'
-                                label="Contraseña"
-                                name='txtPassword'
-                                value={formik.values.txtPassword}
-                                type="password"
-                                placeholder="Contraseña"
-                                helperText={Boolean(formik.errors.txtPassword) ? formik.errors.txtPassword : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtPassword ? 'error' : 'success'}
-                                error={formik.touched.txtPassword && Boolean(formik.errors.txtPassword)}
-                                variant="standard"
-                            />
-                        </div>
-                        <div className="input-field_signup child">
-                            <Icon className='i' icon="ant-design:user-outlined" height='2rem' />
-                            <TextField className='txtField'
-                                label="Confirmar Contraseña"
-                                name='txtConfirmPassword'
-                                value={formik.values.txtConfirmPassword}
-                                type="password"
-                                placeholder="Confirmar Contraseña"
-                                helperText={Boolean(formik.errors.txtConfirmPassword) ? formik.errors.txtConfirmPassword : ""}
-                                onChange={formik.handleChange}
-                                color={formik.errors.txtConfirmPassword ? 'error' : 'success'}
-                                error={formik.touched.txtConfirmPassword && Boolean(formik.errors.txtConfirmPassword)}
-                                variant="standard"
-                            />
-                        </div>
-                        <Autocomplete className='cmb child'
-                            id="cmbPuesto-auto"
-                            disablePortal
-                            options={options}
-                            onBlur={() => formik.setTouched(true)}
-                            onChange={(event, value) => formik.setFieldValue("txtPuesto", value.id)}
-                            renderInput={(params) => (
-                                <TextField
-                                    name='txtPuesto'
-                                    {...params}
-                                    helperText={Boolean(formik.errors.txtPuesto) ? formik.errors.txtPuesto : ""}
-                                    error={formik.touched.txtPuesto && Boolean(formik.errors.txtPuesto)}
-                                    label='Puesto'
-                                />)}
-                        />
-                        <Stack className='stck child' direction="row" spacing={1} alignItems="center">
-                            <Typography>Inactivo</Typography>
-                            <Switch defaultChecked />
-                            <Typography>Activo</Typography>
-                        </Stack>
-                        <div className='btn_mn'>
-                            <NavLink to="/admin/users">
-                                <Button className='btn_form' type='button' variant='contained' color='error'>Cancelar</Button>
-                            </NavLink>
-                            <Button className='btn_form' type='submits' variant='contained' color='success'>Guardar</Button>
-                        </div>
-                    </form>
+                    <ErrorBoundary >
+                        <form className='form' onSubmit={formik.handleSubmit}>
+                            <div className="input-field_signup child">
+                                <Icon className='i' icon="ant-design:user-outlined" height='2rem' />
+                                <TextField className='txtField'
+                                    label="Titular"
+                                    name='txtTitular'
+                                    value={formik.values.txtTitular}
+                                    type="text"
+                                    placeholder="Titular"
+                                    helperText={Boolean(formik.errors.txtTitular) ? formik.errors.txtTitular : ""}
+                                    onChange={formik.handleChange}
+                                    color={formik.errors.txtTitular ? 'error' : 'success'}
+                                    error={formik.touched.txtTitular && Boolean(formik.errors.txtTitular)}
+                                    variant="standard"
+                                />
+                            </div>
+                            <div className="input-field_signup child">
+                                <Icon className='i' icon="icon-park-outline:edit-name" height='2rem' />
+                                <TextField className='txtField'
+                                    label="Descripión"
+                                    name='txtDesc'
+                                    multiline={true}
+                                    rows={3}
+                                    value={formik.values.txtDesc}
+                                    type="text"
+                                    placeholder="Descripción"
+                                    helperText={Boolean(formik.errors.txtDesc) ? formik.errors.txtDesc : ""}
+                                    onChange={formik.handleChange}
+                                    color={formik.errors.txtDesc ? 'error' : 'success'}
+                                    error={formik.touched.txtDesc && Boolean(formik.errors.txtDesc)}
+                                    variant="standard"
+                                />
+                            </div>
+                            <div className="input-field_signup child">
+                                <Icon className='i' icon="" height='2rem' />
+                                <TextField className='txtField'
+                                    label="Cuerpo de la Noticia"
+                                    name='txtNoticia'
+                                    multiline={true}
+                                    rows={8}
+                                    value={formik.values.txtNoticia}
+                                    type="text"
+                                    placeholder="Noticia"
+                                    helperText={Boolean(formik.errors.txtNoticia) ? formik.errors.txtNoticia : ""}
+                                    onChange={formik.handleChange}
+                                    color={formik.errors.txtNoticia ? 'error' : 'success'}
+                                    error={formik.touched.txtNoticia && Boolean(formik.errors.txtNoticia)}
+                                    variant="standard"
+                                />
+                            </div>
+                            <label className='upload' htmlFor="contained-button">
+                                <h3>Portada de la Noticia</h3>
+                                <div className='display_img'>
+                                    {
+                                        <div className='main_display'>
+                                            <img style={{ height: '5rem' }} src={mainUrl} alt={mainUrl} />
+                                        </div>
+                                    }
+                                </div>
+                                <input name='main' style={{ display: 'none' }} accept="image/jpg" onChange={handleMain} id="contained-button" type="file" />
+                                <Button variant="contained" component="span">
+                                    Upload
+                                </Button>
+                            </label>
+                            <label className='upload' htmlFor="contained-button-file">
+                                <h3>Imagenes Secundarias</h3>
+                                <div className='display_img'>
+                                    {
+                                        fileUrl ? renderImages(fileUrl) : <></>
+                                    }
+                                </div>
+                                <input name='images' style={{ display: 'none' }} accept="image/jpg" onChange={handleChange} id="contained-button-file" type="file" multiple />
+                                <Button variant="contained" component="span">
+                                    Upload
+                                </Button>
+                            </label>
+                            <div className='btn_mn'>
+                                <NavLink to="/admin/news">
+                                    <Button className='btn_form' type='button' variant='contained' color='error'>Cancelar</Button>
+                                </NavLink>
+                                <Button className='btn_form' type='submits' variant='contained' color='success'>Guardar</Button>
+                            </div>
+                        </form>
+                    </ErrorBoundary>
                 </div>
             }
         </>

@@ -166,7 +166,6 @@ const Form = ({ paramid }) => {
                             id="cmbPuesto-auto"
                             disablePortal
                             options={options}
-                            onBlur={() => formik.setTouched(true)}
                             onChange={(event, value) => formik.setFieldValue("txtPuesto", value.id)}
                             renderInput={(params) => (
                                 <TextField

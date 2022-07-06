@@ -1,18 +1,27 @@
 import { Icon } from '@iconify/react';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Burger from '../Burger/Burger';
 import './HeaderNav.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
-const HeaderNav = ({Title}) => {
+import AuthContext from '../../Context/AuthProvider';
+
+const HeaderNav = ({ Title }) => {
+    const { auth, setAuth } = useContext(AuthContext);
     const [open, setOpen] = useState(false);
     const [hideNav, setHideNav] = useState(['hide_admin']);
+    const navigate = useNavigate();
     const menuId = "main-menu";
     const toggleHamburger = () => {
         setOpen(!open);
         setHideNav(open ? ["hide_admin"] : ["show_admin"]);
     }
 
+    const logout = () => {
+        setAuth({});
+        localStorage.removeItem("user");
+        navigate('/');
+    }
     return (
         <div className='full_hdr'>
             <div className="dashboard-header">
@@ -25,7 +34,9 @@ const HeaderNav = ({Title}) => {
                     <div className="user-img">
                         <Icon className="iconify person-circle" icon="bi:person-circle" />
                         <p className="auth-user">
-                            Name
+                            {
+                                auth.user ? auth.user.username : logout
+                            }
                         </p>
                     </div>
                     <ul className="dash-nav-items">
@@ -47,15 +58,19 @@ const HeaderNav = ({Title}) => {
                                 <span>Eventos</span>
                             </NavLink>
                         </li>
-                        <li className="dash-nav-item">
-                            <NavLink to="/admin/users" className={({ isActive }) => (isActive ? "active-dash" : "") + " dash-nav-link "}>
-                                <Icon className='iconify' icon="la:users" />
-                                <span>Usuarios</span>
-                            </NavLink>
-                        </li>
+                        {
+                            (auth.user.idPost === 1 || auth.user.idPost === 4) ? (
+                            <li className="dash-nav-item">
+                                <NavLink to="/admin/users" className={({ isActive }) => (isActive ? "active-dash" : "") + " dash-nav-link "}>
+                                    <Icon className='iconify' icon="la:users" />
+                                    <span>Usuarios</span>
+                                </NavLink>
+                            </li>
+                            ) : <></>
+                        }
                     </ul>
                     <div className="dashboard-logout-section">
-                        <a href="/logout" className="btn-logout">Logout</a>
+                        <button className="btn-logout" onClick={logout}>Logout</button>
                     </div>
                 </nav>
             </div>

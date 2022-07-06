@@ -64,6 +64,7 @@
     display: flex;
     width: calc(94%);
     justify-content: space-between;
+    transition: all 0.5s;
 }
 
 .labels {
@@ -115,13 +116,16 @@ ul.content li {
     width: calc(100%);
 }
 
+li.anmt {
+    transition: all 0.5s;
+}
+
 ul.content li:hover {
     color: #3296D1;
     background-color: rgba(255, 255, 255, 0.75);
 }
 
 ul.content {
-    transition: all 0.5s;
     display: inline;
     visibility: visible;
 }

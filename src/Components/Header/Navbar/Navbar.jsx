@@ -74,8 +74,8 @@ const Navbar = () => {
                             </li>
                         </div>
                     </NavLink>
-                    <div className='tst'>
-                        <li className='li label' onClick={toggleAccordionA} onMouseEnter={openA} onMouseLeave={closeA}>
+                    <div className='tst'onMouseEnter={openA} onMouseLeave={closeA}>
+                        <li className='li label' onClick={toggleAccordionA} >
                             <div className='labels'>
                                 <Icon className="icon" icon="bxs:home" width="25" />
                                 <span>Alcaldía</span>
@@ -84,8 +84,9 @@ const Navbar = () => {
                         </li>
                         <div className='subMenu'>
                             <ul className={[hideA, 'content'].join(' ')}>
-                                <li><Icon className="icon" icon="bxs:home" width="25" />Organigrama</li>
-                                <li><Icon className="icon" icon="bxs:home" width="25" />Departamentos</li>
+                                <li className='anmt'><Icon className="icon" icon="bxs:home" width="25" />Organigrama</li>
+                                <li className='anmt'><Icon className="icon" icon="bxs:home" width="25" />Departamentos</li>
+                                <li className='anmt'><Icon className="icon" icon="bxs:home" width="25" />Contactos</li>
                             </ul>
                         </div>
                     </div>
@@ -97,8 +98,8 @@ const Navbar = () => {
                             </li>
                         </div>
                     </NavLink>
-                    <div className='tst'>
-                        <li className='li label' onClick={toggleAccordionB} onMouseEnter={openB} onMouseLeave={closeB}>
+                    <div className='tst' onMouseEnter={openB} onMouseLeave={closeB}>
+                        <li className='li label' onClick={toggleAccordionB} >
                             <div className='labels'>
                                 <Icon className="icon" icon="bxs:home" width="25" />
                                 <span>Turismo</span>
@@ -106,8 +107,8 @@ const Navbar = () => {
                             <Icon className="rotate-b" icon="ant-design:caret-down-filled" width="15" />
                         </li>
                         <ul className={[hideB, 'content'].join(' ')}>
-                            <li><Icon className="icon" icon="bxs:home" width="25" />Organigrama</li>
-                            <li><Icon className="icon" icon="bxs:home" width="25" />Departamentos</li>
+                            <li className='anmt'><Icon className="icon" icon="bxs:home" width="25" />Cultura</li>
+                            <li className='anmt'><Icon className="icon" icon="bxs:home" width="25" />Eventos</li>
                         </ul>
                     </div>
                     <NavLink to="/back" className={({ isActive }) => (isActive ? "activated" : "") + " li"} >
