@@ -1,0 +1,21 @@
+/*Dialog*/
+
+.login_right {
+    background-color: #DBC046;
+}
+
+.login_left {
+    display: flex;
+    background-color: #454545;
+    justify-content: center;
+}
+
+.login_img {
+    width: 15rem;
+}
+
+.form_box {
+    background-color: #f1f1f1;
+    padding: 1rem;
+    border-radius: 15px;
+}

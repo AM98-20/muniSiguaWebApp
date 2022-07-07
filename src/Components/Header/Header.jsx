@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Header.css';
 import { Icon } from '@iconify/react';
-import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 import { Button } from '@mui/material';
+import LoginDialog from '../Dialog/LoginDialog';
 
 const Header = () => {
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(!open);
+    };
 
     return (
         <>
@@ -22,14 +27,13 @@ const Header = () => {
                         <img className='only_small' src="/logo.png" alt="logo" />
                     </div>
                     <div className="header_right">
-                        <NavLink to="admin">
-                            <Button variant="contained" color="success" className='login_button' >
-                                <span className="only_large">Iniciar Sesión</span>
-                                <span className='only_small login_btn_text'>
-                                    <Icon color='#fff' icon="uil:signin" />
-                                </span>
-                            </Button>
-                        </NavLink>
+                        <Button variant="contained" color="success" className='login_button' onClick={() => handleClickOpen()} >
+                            <span className="only_large">Iniciar Sesión</span>
+                            <span className='only_small login_btn_text'>
+                                <Icon color='#fff' icon="uil:signin" />
+                            </span>
+                        </Button>
+                        <LoginDialog open={open} handleClose={() => setOpen(false)} />
                     </div>
                 </div>
             </div>
