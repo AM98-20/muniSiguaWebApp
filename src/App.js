@@ -23,7 +23,6 @@ function App() {
 
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem('user'));
-    console.log(auth);
     if (auth !== null) {
       setAuth(auth);
     }

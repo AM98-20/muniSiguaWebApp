@@ -20,7 +20,7 @@ const LOGIN_URL = "/api/v1/auth/login";
 const LoginDialog = ({ open, handleClose }) => {
     const navigate = useNavigate();
 
-    const { setAuth } = useContext(AuthContext);
+    const { auth, setAuth } = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
 
