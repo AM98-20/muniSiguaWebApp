@@ -19,3 +19,28 @@
     padding: 1rem;
     border-radius: 15px;
 }
+
+@media (min-width: 768px) {
+    .login_box {
+        display: flex;
+        flex-direction: row;
+    }
+    .login_img {
+        height: 25rem;
+        width: 18rem;
+    }
+    .login_left {
+        display: flex;
+        width: 50%;
+    }
+    .login_right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+    }
+    .form_box {
+        height: 50%;
+        width: 80%;
+    }
+}

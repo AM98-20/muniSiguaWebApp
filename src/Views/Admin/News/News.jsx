@@ -31,37 +31,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159),
-    createData('Ice cream sandwich', 237),
-    createData('Eclair', 262),
-    createData('Cupcake', 305),
-    createData('Gingerbread', 356),
-    createData('Fren yoghurt', 159),
-    createData('Ie cream sandwich', 237),
-    createData('clair', 262),
-    createData('pcake', 305),
-    createData('ngerbread', 356),
-    createData(' yoghurt', 159),
-    createData('e cream sandwich', 237),
-    createData('lair', 262),
-    createData('upcake', 305),
-    createData('ingerbread', 356),
-    createData('rozen yoghurt', 159),
-    createData('ream sandwich', 237),
-    createData('clair', 262),
-    createData('ake', 305),
-    createData('gerbread', 356),
-];
-
-const News = () => {
+const News = ({ news }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [open, setOpen] = useState(false);
+
+    let rows = [];
+
+    for (let j = 0; j < news.length; j++) {
+        rows.push(news[j]);
+    }
 
     const handleClickOpen = () => {
         setOpen(!open);
@@ -113,18 +92,19 @@ const News = () => {
                         <TableBody>
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => (
-                                    <StyledTableRow key={row.name}>
+                                    <StyledTableRow key={row.idNews}>
                                         <StyledTableCell component="th" scope="row" >
-                                            {editIcon(row.name)}
+                                            {editIcon(row.idNews)}
                                         </StyledTableCell>
                                         <StyledTableCell component="th" scope="row">
                                             {deleteIcon}
                                         </StyledTableCell>
                                         <StyledTableCell component="th" scope="row">
-                                            {row.name}
+                                            {row.newsName}
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                ))}
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>

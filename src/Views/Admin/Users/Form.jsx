@@ -1,75 +1,175 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Form.css';
 import { TextField, Autocomplete, Button, Switch, Typography, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { axiosPrivate } from '../../../api/axios';
+import SnackbarAlert from '../../../Components/Snackbar/Snackbar';
 
 function createData(id, label) {
     return { label, id };
 }
 
 const options = [
-    createData(1, "Administrador"),
-    createData(2, "Editor"),
+    createData(1, 'Administrador'),
+    createData(2, 'Editor'),
+    createData(3, 'Escritor'),
+    createData(4, 'Informática'),
 ];
 
-const Form = ({ paramid }) => {
-    let id = paramid;
-    if (id) {
+const Form = ({ user }) => {
+    const navigate = useNavigate();
 
+    const [open, setOpen] = useState(false);
+    const [mensaje, setMensaje] = useState('');
+    const [alerta, setAlerta] = useState('');
+
+    let initial;
+    let validation;
+    if (Object.keys(user).length !== 0) {
+        let boolState;
+        if (user.state === 0) {
+            boolState = false;
+        } else {
+            boolState = true;
+        }
+        initial = {
+            txtUser: user.username,
+            txtNombre: user.name,
+            txtApellido: user.surname,
+            txtEmail: user.email,
+            txtPassword: '',
+            txtConfirmPassword: '',
+            txtPuesto: user.post.postDesc,
+            idPuesto: user.post.idPost,
+            state: boolState
+        }
+        validation = Yup.object({
+            txtUser: Yup.string()
+                .min(3, "Minimum 3 characters")
+                .max(15, 'Must be 15 characters or less')
+                .required("Name Requiered"),
+            txtNombre: Yup.string()
+                .min(3, "Minimum 3 characters")
+                .max(15, 'Must be 15 characters or less')
+                .required("Name Requiered"),
+            txtApellido: Yup.string()
+                .min(3, "Minimum 3 characters")
+                .max(15, 'Must be 15 characters or less')
+                .required("Apellido Requiered"),
+            txtEmail: Yup.string()
+                .email("Invalid Email")
+                .required("Email Requiered"),
+            txtPuesto: Yup.string()
+                .required("Seleccione un Puesto")
+        });
     }
-
-    const validation = Yup.object({
-        txtUser: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Name Requiered"),
-        txtNombre: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Name Requiered"),
-        txtApellido: Yup.string()
-            .min(3, "Minimum 3 characters")
-            .max(15, 'Must be 15 characters or less')
-            .required("Apellido Requiered"),
-        txtEmail: Yup.string()
-            .email("Invalid Email")
-            .required("Email Requiered"),
-        txtPassword: Yup.string()
-            .min(8, "Password must be 8 character minimum")
-            .matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{8,})\S$/,
-                "Must Contain 8 characters, 1 uppercase, 1 lowercase, 1 number")
-            .required("Password Requiered"),
-        txtConfirmPassword: Yup.string()
-            .oneOf([Yup.ref('txtPassword'), null], "Passwords must match"),
-        txtPuesto: Yup.string()
-            .required("Seleccione un Puesto")
-    });
-
-    const initial = {
-        txtUser: '',
-        txtNombre: '',
-        txtApellido: '',
-        txtEmail: '',
-        txtPassword: '',
-        txtConfirmPassword: '',
-        txtPuesto: ''
+    else {
+        initial = {
+            txtUser: '',
+            txtNombre: '',
+            txtApellido: '',
+            txtEmail: '',
+            txtPassword: '',
+            txtConfirmPassword: '',
+            txtPuesto: '',
+            idPuesto: '',
+            state: false
+        }
+        validation = Yup.object({
+            txtUser: Yup.string()
+                .min(3, "Minimum 3 characters")
+                .max(15, 'Must be 15 characters or less')
+                .required("Name Requiered"),
+            txtNombre: Yup.string()
+                .min(3, "Minimum 3 characters")
+                .max(15, 'Must be 15 characters or less')
+                .required("Name Requiered"),
+            txtApellido: Yup.string()
+                .min(3, "Minimum 3 characters")
+                .max(15, 'Must be 15 characters or less')
+                .required("Apellido Requiered"),
+            txtEmail: Yup.string()
+                .email("Invalid Email")
+                .required("Email Requiered"),
+            txtPuesto: Yup.string()
+                .required("Seleccione un Puesto"),
+            txtPassword: Yup.string()
+                .min(8, "Password must be 8 character minimum")
+                .matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{8,})\S$/,
+                    "Must Contain 8 characters, 1 uppercase, 1 lowercase, 1 number")
+                .required("Password Requiered"),
+            txtConfirmPassword: Yup.string()
+                .oneOf([Yup.ref('txtPassword'), null], "Passwords must match")
+        });
     }
 
     const formik = useFormik({
         initialValues: initial,
         validationSchema: validation,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit: async (values) => {
+            //alert(JSON.stringify(values, null, 2));
+            try {
+                let boolState;
+                if (values.state) {
+                    boolState = 1;
+                } else {
+                    boolState = 0;
+                }
+                if (Object.keys(user).length !== 0) {
+                    //update
+                    await axiosPrivate.put('/users/edit_user', {
+                        id: String(user.idUser),
+                        username: values.txtUser,
+                        name: values.txtNombre,
+                        surname: values.txtApellido,
+                        email: values.txtEmail,
+                        idPost: String(values.idPuesto),
+                        userState: boolState
+                    }).then((res) => {
+                        setMensaje("Usuario Guardado");
+                        setAlerta("success");
+                        setOpen(true);
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 2000);
+                    }).catch((error) => {
+                        setMensaje(error.response.data.message);
+                        setAlerta("error");
+                        setOpen(true);
+                    });
+                } else {
+                    //new
+                    await axiosPrivate.post('/auth/user-signup', {
+                        username: values.txtUser,
+                        name: values.txtNombre,
+                        surname: values.txtApellido,
+                        email: values.txtEmail,
+                        password: values.txtPassword,
+                        confirmPassword: values.txtConfirmPassword,
+                        idPost: String(values.idPuesto),
+                        userState: boolState
+                    }).then((res) => {
+                        console.log(res);
+                    }).catch((error) => {
+                        console.error(error.response.data);
+                        setMensaje(error.response.data.result);
+                        setAlerta(error.response.data.status);
+                        setOpen(true);
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
     });
 
     return (
         <>
-            {id &&
+            {user &&
                 <div className='main_section'>
                     <form className='form' onSubmit={formik.handleSubmit}>
                         <div className="input-field_signup child">
@@ -132,7 +232,7 @@ const Form = ({ paramid }) => {
                                 variant="standard"
                             />
                         </div>
-                        <div className="input-field_signup child">
+                        <div style={{ display: (Object.keys(user).length !== 0) ? 'none' : '' }} className="input-field_signup child">
                             <Icon className='i' icon="iconoir:password-cursor" height='2rem' />
                             <TextField className='txtField'
                                 label="Contraseña"
@@ -147,7 +247,7 @@ const Form = ({ paramid }) => {
                                 variant="standard"
                             />
                         </div>
-                        <div className="input-field_signup child">
+                        <div style={{ display: (Object.keys(user).length !== 0) ? 'none' : '' }} className="input-field_signup child">
                             <Icon className='i' icon="ant-design:user-outlined" height='2rem' />
                             <TextField className='txtField'
                                 label="Confirmar Contraseña"
@@ -166,7 +266,12 @@ const Form = ({ paramid }) => {
                             id="cmbPuesto-auto"
                             disablePortal
                             options={options}
-                            onChange={(event, value) => formik.setFieldValue("txtPuesto", value.id)}
+                            isOptionEqualToValue={(option, value) => option.label === value}
+                            value={formik.values.txtPuesto}
+                            onChange={(event, value) => {
+                                formik.setFieldValue("txtPuesto", value.label);
+                                formik.setFieldValue("idPuesto", value.id);
+                            }}
                             renderInput={(params) => (
                                 <TextField
                                     name='txtPuesto'
@@ -178,7 +283,11 @@ const Form = ({ paramid }) => {
                         />
                         <Stack className='stck child' direction="row" spacing={1} alignItems="center">
                             <Typography>Inactivo</Typography>
-                            <Switch defaultChecked />
+                            <Switch
+                                checked={formik.values.state}
+                                onChange={formik.handleChange}
+                                name='state'
+                            />
                             <Typography>Activo</Typography>
                         </Stack>
                         <div className='btn_mn'>
@@ -188,6 +297,7 @@ const Form = ({ paramid }) => {
                             <Button className='btn_form' type='submits' variant='contained' color='success'>Guardar</Button>
                         </div>
                     </form>
+                    <SnackbarAlert open={open} handleClose={() => setOpen(false)} mensaje={mensaje} alert={alerta} />
                 </div>
             }
         </>
