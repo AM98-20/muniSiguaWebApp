@@ -15,12 +15,12 @@ import SnackbarAlert from '../Snackbar/Snackbar';
 
 import publicAxios from '../../api/axios';
 import AuthContext from '../../Context/AuthProvider';
-const LOGIN_URL = "/api/v1/auth/login";
+const LOGIN_URL = "/auth/login";
 
 const LoginDialog = ({ open, handleClose }) => {
     const navigate = useNavigate();
 
-    const { auth, setAuth } = useContext(AuthContext);
+    const { setAuth } = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
 
@@ -88,74 +88,78 @@ const LoginDialog = ({ open, handleClose }) => {
                 onClose={handleOnClose}
                 maxWidth='lg'
             >
-                <DialogContent className='login_left'>
-                    <img className='login_img' src='/login_img.svg' alt='secure login - undraw' />
-                </DialogContent>
-                <DialogContent className='login_right'>
-                    <div className='form_box'>
-                        <TextField
-                            margin="dense"
-                            id="name"
-                            name='txtUser'
-                            label="Usuario"
-                            type="text"
-                            fullWidth
-                            variant="filled"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Icon icon="carbon:user-avatar-filled-alt" color='#454545' width="25" />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            value={formik.values.txtUser}
-                            placeholder="Usuario"
-                            onBlur={formik.handleBlur}
-                            helperText={(formik.touched.txtUser && Boolean(formik.errors.txtUser)) ? formik.errors.txtUser : ""}
-                            onChange={formik.handleChange}
-                            color={formik.errors.txtUser ? 'error' : 'success'}
-                            error={formik.touched.txtUser && Boolean(formik.errors.txtUser)}
-                        />
-                        <TextField
-                            margin="dense"
-                            id="password"
-                            name='txtPassword'
-                            label="Contraseña"
-                            type={showPassword ? 'text' : 'password'}
-                            fullWidth
-                            variant="filled"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Icon icon="gg:password" color='#454545' width="25" />
-                                    </InputAdornment>
-                                ), endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Icon
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            edge="end"
-                                            icon={showPassword ? 'codicon:eye-closed' : 'codicon:eye'}
-                                        />
-                                    </InputAdornment>
-                                )
-                            }}
-                            value={formik.values.txtPassword}
-                            placeholder="Usuario"
-                            onBlur={formik.handleBlur}
-                            helperText={(formik.touched.txtPassword && Boolean(formik.errors.txtPassword)) ? formik.errors.txtPassword : ""}
-                            onChange={formik.handleChange}
-                            color={formik.errors.txtPassword ? 'error' : 'success'}
-                            error={formik.touched.txtPassword && Boolean(formik.errors.txtPassword)}
-                        />
-                        <DialogActions>
-                            <Button variant='contained' color='error' onClick={handleOnClose}>Cancelar</Button>
-                            <Button variant='contained' color='success' onClick={formik.handleSubmit}>Ingresar</Button>
-                            <SnackbarAlert open={openAlert} handleClose={() => setOpenAlert(false)} mensaje="¡Credenciales incorrectas!" alert="error" />
-                        </DialogActions>
-                    </div>
-                </DialogContent>
+                <div className='login_box'>
+                    <DialogContent className='login_left'>
+                        <img className='login_img' src='/login_img.svg' alt='secure login - undraw' />
+                    </DialogContent>
+                    <DialogContent className='login_right'>
+                        <div className='form_box'>
+                            <form action="">
+                                <TextField
+                                    margin="dense"
+                                    id="name"
+                                    name='txtUser'
+                                    label="Usuario"
+                                    type="text"
+                                    fullWidth
+                                    variant="filled"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Icon icon="carbon:user-avatar-filled-alt" color='#454545' width="25" />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    value={formik.values.txtUser}
+                                    placeholder="Usuario"
+                                    onBlur={formik.handleBlur}
+                                    helperText={(formik.touched.txtUser && Boolean(formik.errors.txtUser)) ? formik.errors.txtUser : ""}
+                                    onChange={formik.handleChange}
+                                    color={formik.errors.txtUser ? 'error' : 'success'}
+                                    error={formik.touched.txtUser && Boolean(formik.errors.txtUser)}
+                                />
+                                <TextField
+                                    margin="dense"
+                                    id="password"
+                                    name='txtPassword'
+                                    label="Contraseña"
+                                    type={showPassword ? 'text' : 'password'}
+                                    fullWidth
+                                    variant="filled"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Icon icon="gg:password" color='#454545' width="25" />
+                                            </InputAdornment>
+                                        ), endAdornment: (
+                                            <InputAdornment position="end">
+                                                <Icon
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                    icon={showPassword ? 'codicon:eye-closed' : 'codicon:eye'}
+                                                />
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                    value={formik.values.txtPassword}
+                                    placeholder="Usuario"
+                                    onBlur={formik.handleBlur}
+                                    helperText={(formik.touched.txtPassword && Boolean(formik.errors.txtPassword)) ? formik.errors.txtPassword : ""}
+                                    onChange={formik.handleChange}
+                                    color={formik.errors.txtPassword ? 'error' : 'success'}
+                                    error={formik.touched.txtPassword && Boolean(formik.errors.txtPassword)}
+                                />
+                                <DialogActions>
+                                    <Button variant='contained' color='error' onClick={handleOnClose}>Cancelar</Button>
+                                    <Button variant='contained' color='success' onClick={formik.handleSubmit}>Ingresar</Button>
+                                    <SnackbarAlert open={openAlert} handleClose={() => setOpenAlert(false)} mensaje="¡Credenciales incorrectas!" alert="error" />
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </div>
             </Dialog>
         </div>
     );

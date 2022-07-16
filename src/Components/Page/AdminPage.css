@@ -13,7 +13,7 @@
 
 .page_container.no_header_admin main,
 .page_container.no_footer_admin main {
-    max-height: calc(100vh - 10rem);
+    max-height: calc(100vh - 5rem);
 }
 
 .page_container.no_header.no_footer_admin main {
@@ -37,10 +37,10 @@
 
 @media (min-width: 480px) {
     .page_header_admin {
-        height: 7rem;
+        height: 5rem;
     }
     .page_container.no_header_admin main,
     .page_container.no_footer_admin main {
-        max-height: calc(100vh - 7rem);
+        max-height: calc(100vh - 5rem);
     }
 }

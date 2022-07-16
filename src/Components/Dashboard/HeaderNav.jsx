@@ -35,7 +35,7 @@ const HeaderNav = ({ Title }) => {
                         <Icon className="iconify person-circle" icon="bi:person-circle" />
                         <p className="auth-user">
                             {
-                                auth.user ? auth.user.username : logout
+                                auth.user ? auth.user.username : logout()
                             }
                         </p>
                     </div>

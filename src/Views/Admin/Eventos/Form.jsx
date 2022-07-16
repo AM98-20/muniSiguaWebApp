@@ -1,122 +1,155 @@
 import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
-import { TextField, Button } from '@mui/material';
-
+import { TextField, Button, Input, InputLabel } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
+import SnackbarAlert from '../../../Components/Snackbar/Snackbar';
 import ErrorBoundary from '../../Error/ErrorBoundary';
+import { useEffect, useContext } from 'react';
+import { axiosPrivate } from '../../../api/axios';
 
-const Form = ({ paramid }) => {
-    const [mainUrl, setMainUrl] = useState([]);
-    const [mainImg, setMainImg] = useState([]);
-    const [fileUrl, setFileUrl] = useState([]);
-    const [image, setImage] = useState([]);
-    let id = paramid;
-    if (id) {
+import AuthContext from "../../../Context/AuthProvider";
 
-    }
+const Form = ({ event }) => {
+    const navigate = useNavigate();
+    const { auth } = useContext(AuthContext);
 
-    // useEffect(() => {
-    //   setFileUrl();
-    //   setImage();
-    // }, [fileUrl, image])
+    const [open, setOpen] = useState(false);
+    const [mensaje, setMensaje] = useState('');
+    const [alerta, setAlerta] = useState('');
+    const [image, setImage] = useState(null);
 
-    const handleRemove = (item) => {
-        if (item !== -1) {
-            fileUrl.splice(item, 1);
-            image.splice(item, 1);
-            const array1 = fileUrl;
-            const array2 = image;
-            setFileUrl(array1);
-            setImage(array2);
-        }
-    }
-
-    const handleMain = (e) => {
-        if (e.target.files) {
-            const imgArray = e.target.files[0];
-            const fileArray = URL.createObjectURL(e.target.files[0]);
-            setMainImg(imgArray);
-            setMainUrl(fileArray);
-            console.log(mainImg);
-        }
-    }
-
-    const handleChange = (e) => {
-        if (e.target.files) {
-            const imgArray = Array.from(e.target.files).map((file) => file);
-            const fileArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
-            setImage((prevImg) => prevImg.concat(imgArray));
-            setFileUrl((prevUrls) => prevUrls.concat(fileArray));
-            console.log(image);
-            console.log(fileUrl);
-
-        }
-    }
-
-    const renderImages = (source) => {
-        return source.map((url, i) => {
-            return <div className='main_display'>
-                <Button key={i} className='btn_dlt' variant='contained' color='secondary' onClick={() => handleRemove(i)} ><Icon icon='line-md:cancel-twotone' height='0.8rem' /></Button>
-                <img style={{ height: '5rem' }} src={url} key={url} alt={url} />
-            </div>
-        })
-    }
-
-    const validation = Yup.object({
-        txtTitular: Yup.string()
-            .min(3, "Mínimo 3 caracteres para el Titular")
-            .max(30, 'Máximo 30 caracteres para este campo')
-            .required("Este campo es requerido"),
+    let initial;
+    let validation = Yup.object({
+        txtNombre: Yup.string()
+            .min(3, "Minimum 3 characters")
+            .max(15, 'Must be 15 characters or less')
+            .required("Esciba el nombre del Evento"),
         txtDesc: Yup.string()
-            .max(45, 'Máximo 45 caracteres para este campo')
-            .required("Este campo es requerido"),
-        txtNoticia: Yup.string()
-            .max(1000, 'Máximo 1000 caracteres para este campo')
-            .required("Este campo es requerido"),
+            .min(3, "Minimum 3 characters")
+            .max(100, 'Must be 100 characters or less')
+            .required("Apellido Requiered"),
+        date: Yup.date()
+            .required("Seleccione una Fecha"),
+        url: Yup.string()
+            .required('Ingrese una imagen')
     });
 
-    const initial = {
-        txtTitular: '',
-        txtDesc: '',
-        txtNoticia: ''
+    if (Object.keys(event).length !== 0) {
+        initial = {
+            txtNombre: event.eventName,
+            txtDesc: event.eventDescription,
+            txtState: event.eventState,
+            date: event.eventDate,
+            url: event.imgPortada
+        }
     }
+    else {
+        initial = {
+            txtNombre: '',
+            txtDesc: '',
+            txtState: 'Muy Pronto',
+            date: null,
+            url: null
+        }
+    }
+
+    useEffect(() => {
+        setImage();
+        return () => {
+            setImage(null);
+        }
+    }, [])
 
     const formik = useFormik({
         initialValues: initial,
         validationSchema: validation,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-            console.log(image);
-            console.log(fileUrl);
+        onSubmit: async (values) => {
+            alert(JSON.stringify(values, null, 2) + image);
+            try {
+                if (Object.keys(event).length !== 0) {
+                    //update
+                    await axiosPrivate.put('/events/edit_event', {
+                        id: String(event.idEvent),
+                        eventName: values.txtNombre,
+                        eventDescription: values.txtDesc,
+                        eventState: values.txtState,
+                        imgPortada: values.url
+                    }).then((res) => {
+                        setMensaje("Evento Guardado");
+                        setAlerta("success");
+                        setOpen(true);
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 2000);
+                    }).catch((error) => {
+                        setMensaje(error.response.data.message);
+                        setAlerta("error");
+                        setOpen(true);
+                    });
+                } else {
+                    //new
+                    const timeElapsed = Date.now();
+                    const today = new Date(timeElapsed);
+                    today.toDateString();
+                    await axiosPrivate.post('/events/add_event', {
+                        //data
+                        eventName: values.txtNombre,
+                        eventDescription: values.txtDesc,
+                        eventDate: values.date,
+                        eventPusblishedDate: today,
+                        eventState: values.txtState,
+                        idPublisher: auth.user.idUser,
+                        imgPortada: values.url
+                    }).then((res) => {
+                        setMensaje("Evento Guardado");
+                        setAlerta("success");
+                        setOpen(true);
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 2000);
+                    }).catch((error) => {
+                        console.error(error.response.data);
+                        setMensaje(error.response.data.message);
+                        setAlerta('error');
+                        setOpen(true);
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
     });
 
     return (
         <>
-            {id &&
+            {event &&
                 <div className='main_section'>
                     <ErrorBoundary >
                         <form className='form' onSubmit={formik.handleSubmit}>
                             <div className="input-field_signup child">
-                                <Icon className='i' icon="ant-design:user-outlined" height='2rem' />
+                                <Icon className='i' icon="eos-icons:modified-date-outlined" height='2rem' />
                                 <TextField className='txtField'
-                                    label="Titular"
-                                    name='txtTitular'
-                                    value={formik.values.txtTitular}
+                                    label="Nombre del Evento"
+                                    name='txtNombre'
+                                    value={formik.values.txtNombre}
                                     type="text"
-                                    placeholder="Titular"
-                                    helperText={Boolean(formik.errors.txtTitular) ? formik.errors.txtTitular : ""}
+                                    placeholder="Nombre del Evento"
+                                    helperText={formik.touched.txtNombre && Boolean(formik.errors.txtNombre) ? formik.errors.txtNombre : ""}
                                     onChange={formik.handleChange}
-                                    color={formik.errors.txtTitular ? 'error' : 'success'}
-                                    error={formik.touched.txtTitular && Boolean(formik.errors.txtTitular)}
+                                    onBlur={formik.handleBlur}
+                                    color={formik.errors.txtNombre ? 'error' : 'success'}
+                                    error={formik.touched.txtNombre && Boolean(formik.errors.txtNombre)}
                                     variant="standard"
                                 />
                             </div>
                             <div className="input-field_signup child">
-                                <Icon className='i' icon="icon-park-outline:edit-name" height='2rem' />
+                                <Icon className='i' icon="icon-park-outline:change-date-sort" height='2rem' />
                                 <TextField className='txtField'
                                     label="Descripión"
                                     name='txtDesc'
@@ -125,52 +158,59 @@ const Form = ({ paramid }) => {
                                     value={formik.values.txtDesc}
                                     type="text"
                                     placeholder="Descripción"
-                                    helperText={Boolean(formik.errors.txtDesc) ? formik.errors.txtDesc : ""}
+                                    helperText={formik.touched.txtDesc && Boolean(formik.errors.txtDesc) ? formik.errors.txtDesc : ""}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     color={formik.errors.txtDesc ? 'error' : 'success'}
                                     error={formik.touched.txtDesc && Boolean(formik.errors.txtDesc)}
                                     variant="standard"
                                 />
                             </div>
                             <div className="input-field_signup child">
-                                <Icon className='i' icon="" height='2rem' />
-                                <TextField className='txtField'
-                                    label="Cuerpo de la Noticia"
-                                    name='txtNoticia'
-                                    multiline={true}
-                                    rows={8}
-                                    value={formik.values.txtNoticia}
-                                    type="text"
-                                    placeholder="Noticia"
-                                    helperText={Boolean(formik.errors.txtNoticia) ? formik.errors.txtNoticia : ""}
-                                    onChange={formik.handleChange}
-                                    color={formik.errors.txtNoticia ? 'error' : 'success'}
-                                    error={formik.touched.txtNoticia && Boolean(formik.errors.txtNoticia)}
-                                    variant="standard"
-                                />
+                                <Icon className='i' icon="bi:calendar2-event" height='2rem' />
+                                <LocalizationProvider dateAdapter={AdapterMoment}>
+                                    <DatePicker
+                                        disablePast
+                                        name='date'
+                                        label="Fecha del Evento"
+                                        placeholder='mm/dd/yyyy'
+                                        openTo="day"
+                                        views={['year', 'month', 'day']}
+                                        value={formik.values.date}
+                                        onChange={newValue => { formik.setFieldValue('date', newValue) }}
+                                        renderInput={(params) => <TextField
+                                            onBlur={formik.handleBlur}
+                                            helperText={formik.touched.date && Boolean(formik.errors.date) ? formik.errors.date : ""}
+                                            color={formik.errors.date ? 'error' : 'success'}
+                                            {...params} />}
+                                    />
+                                </LocalizationProvider>
                             </div>
                             <label className='upload' htmlFor="contained-button">
-                                <h3>Portada de la Noticia</h3>
+                                <h3>Portada del evento</h3>
                                 <div className='display_img'>
                                     {
                                         <div className='main_display'>
-                                            <img style={{ height: '5rem' }} src={mainUrl} alt={mainUrl} />
+                                            <img style={{ height: '5rem' }} name='image' src={formik.values.url ? formik.values.url : ''} alt='' />
                                         </div>
                                     }
                                 </div>
-                                <input name='main' style={{ display: 'none' }} accept="image/jpg" onChange={handleMain} id="contained-button" type="file" />
-                                <Button variant="contained" component="span">
-                                    Upload
-                                </Button>
-                            </label>
-                            <label className='upload' htmlFor="contained-button-file">
-                                <h3>Imagenes Secundarias</h3>
-                                <div className='display_img'>
-                                    {
-                                        fileUrl ? renderImages(fileUrl) : <></>
+                                <Input
+                                    name='url'
+                                    value={''}
+                                    style={{ visibility: 'hidden' }}
+                                    accept="image/jpg"
+                                    onChange={
+                                        (img) => {
+                                            img?.target.files.length > 0 ? formik.setFieldValue('url', URL.createObjectURL(img.target.files[0])) : formik.setFieldValue('url', formik.values.url);
+                                            img?.target.files.length > 0 ? setImage(img.target.files[0]) : setImage(image);
+                                        }
                                     }
-                                </div>
-                                <input name='images' style={{ display: 'none' }} accept="image/jpg" onChange={handleChange} id="contained-button-file" type="file" multiple />
+                                    onBlur={formik.handleBlur}
+                                    id="contained-button"
+                                    type="file"
+                                />
+                                <InputLabel className={formik.errors.url ? 'error' : 'none'} >Debe ingresar una portada para el evento</InputLabel>
                                 <Button variant="contained" component="span">
                                     Upload
                                 </Button>
@@ -182,6 +222,7 @@ const Form = ({ paramid }) => {
                                 <Button className='btn_form' type='submits' variant='contained' color='success'>Guardar</Button>
                             </div>
                         </form>
+                        <SnackbarAlert open={open} handleClose={() => setOpen(false)} mensaje={mensaje} alert={alerta} />
                     </ErrorBoundary>
                 </div>
             }

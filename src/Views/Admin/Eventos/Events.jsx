@@ -31,41 +31,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159),
-    createData('Ice cream sandwich', 237),
-    createData('Eclair', 262),
-    createData('Cupcake', 305),
-    createData('Gingerbread', 356),
-    createData('Fren yoghurt', 159),
-    createData('Ie cream sandwich', 237),
-    createData('clair', 262),
-    createData('pcake', 305),
-    createData('ngerbread', 356),
-    createData(' yoghurt', 159),
-    createData('e cream sandwich', 237),
-    createData('lair', 262),
-    createData('upcake', 305),
-    createData('ingerbread', 356),
-    createData('rozen yoghurt', 159),
-    createData('ream sandwich', 237),
-    createData('clair', 262),
-    createData('ake', 305),
-    createData('gerbread', 356),
-];
-
-const Users = () => {
+const Events = ({ events }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [open, setOpen] = useState(false);
 
+    let rows = [];
+
+    for (let j = 0; j < events.length; j++) {
+        rows.push(events[j]);
+    }
+
     const handleClickOpen = () => {
         setOpen(!open);
     };
+
+    const handleReload = () => {
+        window.location.reload();
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -78,7 +61,7 @@ const Users = () => {
 
     const editIcon = (id) => (
         <div>
-            <NavLink to={id}>
+            <NavLink to={'' + id}>
                 <Tooltip title='Editar'>
                     <Icon className='icons icons-a' icon="eva:edit-fill" height={"1.2rem"} />
                 </Tooltip>
@@ -86,9 +69,9 @@ const Users = () => {
         </div>
     );
 
-    const deleteIcon = (
+    const deleteIcon = (id) => (
         <div >
-            <UserDialog open={open} handleClose={() => setOpen(false)} />
+            <UserDialog open={open} handleClose={() => setOpen(false)} id={id} url='/events/delete_event/' onClose={handleReload} />
             <Tooltip title='Eliminar'>
                 <Icon className='icons icons-d' icon="fluent:delete-12-filled" height={"1.2rem"} onClick={() => handleClickOpen()} />
             </Tooltip>
@@ -97,7 +80,7 @@ const Users = () => {
 
     return (
         <div className='usr_main'>
-            <NavLink className="link-nav" to='0'>
+            <NavLink className="link-nav" to='new'>
                 <Button className='btnAdd' variant="contained" color="success">Nuevo</Button>
             </NavLink>
             <div className='usr_mid'>
@@ -107,24 +90,45 @@ const Users = () => {
                             <TableRow>
                                 <StyledTableCell align='right'></StyledTableCell>
                                 <StyledTableCell></StyledTableCell>
-                                <StyledTableCell>Nombre Usuario</StyledTableCell>
+                                <StyledTableCell>Evento</StyledTableCell>
+                                <StyledTableCell>Descripción</StyledTableCell>
+                                <StyledTableCell>Fecha del Evento</StyledTableCell>
+                                <StyledTableCell>Fecha de Publicación</StyledTableCell>
+                                <StyledTableCell>Creador</StyledTableCell>
+                                <StyledTableCell>Estado</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => (
-                                    <StyledTableRow key={row.name}>
+                                    <StyledTableRow key={row.idEvent}>
                                         <StyledTableCell component="th" scope="row" >
-                                            {editIcon(row.name)}
+                                            {editIcon(row.idEvent)}
                                         </StyledTableCell>
                                         <StyledTableCell component="th" scope="row">
-                                            {deleteIcon}
+                                            {deleteIcon(row.idEvent)}
                                         </StyledTableCell>
                                         <StyledTableCell component="th" scope="row">
-                                            {row.name}
+                                            {row.eventName}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.eventDescription}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.eventDate}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.publishedDate}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.user.username}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.eventStatus}
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                ))}
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -143,4 +147,4 @@ const Users = () => {
     )
 }
 
-export default Users;
+export default Events;

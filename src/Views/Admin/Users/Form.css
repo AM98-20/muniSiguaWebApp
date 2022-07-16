@@ -16,7 +16,7 @@ a {
 
 button.btn_form {
     margin-top: 2rem;
-    margin-left: 2rem;
+    margin-left: 0.25rem;
     margin-bottom: 2rem;
     height: fit-content;
 }
@@ -63,33 +63,34 @@ button.btn_dlt {
     position: absolute;
 }
 
+label.error {
+    display: '';
+    color: crimson;
+    font-size: small;
+}
+
+label.none {
+    display: none;
+}
+
 @media (min-width:480px) {
     .main_section {
         margin-top: 3rem;
         margin-left: 10rem;
+    }
+    .child {
+        max-width: 500px;
     }
 }
 
 @media (min-width:780px) {
     .form {
         display: flex;
-        flex-flow: row wrap;
+        flex-flow: column wrap;
         justify-content: center;
+        align-content: center;
     }
     .child {
-        flex: 1 1 50%;
-    }
-    .txtField {
-        width: 100%;
-    }
-    .stck {
-        justify-content: center;
-        margin-left: 3rem;
-        flex: 1 1 100%;
-    }
-    .btn_mn {
-        display: flex;
-        flex: 1 1 100%;
-        justify-content: center;
+        min-width: 500px;
     }
 }
