@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
-import { TextField, Button, Input, InputLabel } from '@mui/material';
+import { TextField, Button, Input, InputLabel, Autocomplete } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -14,6 +14,16 @@ import { useEffect, useContext } from 'react';
 import { axiosPrivate } from '../../../api/axios';
 
 import AuthContext from "../../../Context/AuthProvider";
+
+function createData(id, label) {
+    return { label, id };
+}
+
+const options = [
+    createData(1, "Muy Pronto"),
+    createData(2, "Cancelado"),
+    createData(3, "Finalizado")
+];
 
 const Form = ({ event }) => {
     const navigate = useNavigate();
@@ -44,7 +54,7 @@ const Form = ({ event }) => {
         initial = {
             txtNombre: event.eventName,
             txtDesc: event.eventDescription,
-            txtState: event.eventState,
+            txtState: event.eventStatus,
             date: event.eventDate,
             url: event.imgPortada
         }
@@ -78,6 +88,7 @@ const Form = ({ event }) => {
                         id: String(event.idEvent),
                         eventName: values.txtNombre,
                         eventDescription: values.txtDesc,
+                        eventDate: values.date,
                         eventState: values.txtState,
                         imgPortada: values.url
                     }).then((res) => {
@@ -215,6 +226,24 @@ const Form = ({ event }) => {
                                     Upload
                                 </Button>
                             </label>
+                            <Autocomplete className='cmb child'
+                                id="cmbState-auto"
+                                disablePortal
+                                options={options}
+                                isOptionEqualToValue={(option, value) => option.label === value}
+                                value={formik.values.txtState}
+                                onChange={(event, value) => {
+                                    formik.setFieldValue("txtState", value.label);
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        name='txtState'
+                                        {...params}
+                                        helperText={Boolean(formik.errors.txtState) ? formik.errors.txtState : ""}
+                                        error={formik.touched.txtState && Boolean(formik.errors.txtState)}
+                                        label='Estado'
+                                    />)}
+                            />
                             <div className='btn_mn'>
                                 <NavLink to="/admin/news">
                                     <Button className='btn_form' type='button' variant='contained' color='error'>Cancelar</Button>
