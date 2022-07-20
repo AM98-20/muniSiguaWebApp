@@ -5,12 +5,10 @@ const AboutUs = () => {
   return (
     <div className="main">
       <div class="wrapper">
-        <div class="backgroundTitle">
-          <h1 className="title">CONOCENOS</h1>
-        </div>
-          <aside class="aside aside-1">Mision</aside>
-          <aside class="aside aside-2">Vision</aside>
-        <article class="wrapperMain">
+        <header class="backgroundTitle">Conocenos</header>
+        <aside class="aside aside-1">Aside 1</aside>
+        <aside class="aside aside-2">Aside 2</aside>
+        <article class="mainArticle">
           <h1>Nuestra Historia</h1>
           <p className="paragraph">
             Fue fundado en 1689; en el recuento de población de 1791 era
@@ -64,6 +62,7 @@ const AboutUs = () => {
             esos tiempos casa de retiros para los sacerdotes de su parroquia.
           </p>
         </article>
+        <footer class="footer">Footer</footer>
       </div>
     </div>
   );
