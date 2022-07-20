@@ -1,8 +1,6 @@
 .imageContainer{
     display: flex;
-    justify-content: space-around;
-    
-    
+    justify-content: space-around;    
 }
 
 .image1{
@@ -10,30 +8,47 @@
     align-self: center;
 }
 
-
 .wrapper {
     display: flex;  
     flex-flow: row wrap;
     font-weight: bold;
     text-align: center; 
     margin-top: 3rem;
-    justify-content: space-between;
+    justify-content: space-around ;
+    row-gap: 1rem;
   }
   
   .wrapper > * {
     margin: auto;
-    flex: 1 100%;
+    flex: 1 200%;
+    padding: 10px;
   }
   
-  .header {
-    background: tomato;
+  .backgroundTitle {
+    background: rgb(47, 155, 63);
+    min-height: 400px;
+    margin: 0 -2rem;
+    
   }
   
+  .title {
+    display: flex;
+        width: 50%;
+        height: 400px;
+        margin: auto;
+        align-items:center;
+        justify-content:left;
+  }
+
   .wrapperMain {
+    width: auto;
+    height: auto;
     text-align: justify;
-    background: deepskyblue;
+    margin: 0 10rem;
+    font-weight: 400;
   }
   
+
   .aside-1 {
     background: gold;
   }
@@ -42,17 +57,19 @@
     background: hotpink;
   }
   
-  @media all and (max-width: 481px) {
+
+  @media all and (max-width: 760px) {
+    .wrapper { flex-direction: row wrap;}
+    .wrapperMain {margin: 0 0;}
     .imageContainer{
-        flex-direction: column;
-    }
-  }
-  @media all and (min-width: 600px) {
-    .aside { flex: 1 0 0; margin: 1rem; }
+      flex-direction: column;}
+    .title {justify-content: center;}
   }
   
   @media all and (min-width: 800px) {
-    .aside-1 { order: 1; } 
+    .wrapper        {flex: 3 0px}
+    .aside-1        { order: 1; } 
+    .aside-2        { order: 2; }
     .wrapperMain    { order: 3; }
   }
   
