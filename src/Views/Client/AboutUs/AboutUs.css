@@ -21,7 +21,6 @@
   }
   
   .wrapper > * {
-    padding: 40px;
     margin: auto;
     flex: 1 100%;
   }
@@ -55,7 +54,6 @@
   @media all and (min-width: 800px) {
     .aside-1 { order: 1; } 
     .wrapperMain    { order: 3; }
-    .aside-2 { order: 2; }
   }
   
   
