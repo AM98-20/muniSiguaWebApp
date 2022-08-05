@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Icon } from '@iconify/react';
 import { TextField, Button, Input, InputLabel, Autocomplete } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,12 +7,17 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
 import { NavLink, useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+import { initializeApp } from "firebase/app";
+import imageCompression from 'browser-image-compression';
+//import { getAnalytics } from "firebase/analytics";
 
+import firebaseConfig from '../../../firebase/Apikeys';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import LoadingScreen from '../../../Components/Dialog/LoadingScreen';
 import SnackbarAlert from '../../../Components/Snackbar/Snackbar';
 import ErrorBoundary from '../../Error/ErrorBoundary';
-import { useEffect, useContext } from 'react';
 import { axiosPrivate } from '../../../api/axios';
-
 import AuthContext from "../../../Context/AuthProvider";
 
 function createData(id, label) {
@@ -25,25 +30,28 @@ const options = [
     createData(3, "Finalizado")
 ];
 
-const Form = ({ event }) => {
+const Form = ({ event, loading }) => {
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
     const navigate = useNavigate();
-    const { auth } = useContext(AuthContext);
+    const { auth, setAuth } = useContext(AuthContext);
 
+    const [uploading, setUploading] = useState();
     const [open, setOpen] = useState(false);
     const [mensaje, setMensaje] = useState('');
     const [alerta, setAlerta] = useState('');
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState();
 
     let initial;
     let validation = Yup.object({
         txtNombre: Yup.string()
             .min(3, "Minimum 3 characters")
             .max(15, 'Must be 15 characters or less')
-            .required("Esciba el nombre del Evento"),
+            .required("Campo Requerido"),
         txtDesc: Yup.string()
             .min(3, "Minimum 3 characters")
             .max(100, 'Must be 100 characters or less')
-            .required("Apellido Requiered"),
+            .required("Campo Requerido"),
         date: Yup.date()
             .required("Seleccione una Fecha"),
         url: Yup.string()
@@ -70,28 +78,53 @@ const Form = ({ event }) => {
     }
 
     useEffect(() => {
-        setImage();
+        console.log(image);
         return () => {
-            setImage(null);
         }
-    }, [])
+    }, [image])
 
     const formik = useFormik({
         initialValues: initial,
         validationSchema: validation,
         onSubmit: async (values) => {
-            alert(JSON.stringify(values, null, 2) + image);
+            //alert(JSON.stringify(values, null, 2) + image);
             try {
+                if (auth.accessToken) {
+                    let token = auth.accessToken;
+                    const { exp } = jwtDecode(token)
+                    // Refresh the token a minute early to avoid latency issues
+                    const expirationTime = (exp * 1000) - 60000
+                    if (Date.now() >= expirationTime) {
+                        setAuth({});
+                        localStorage.clear();
+                        alert('La sesion ya caduco. Se cerrara la sesión actual.')
+                        navigate('/');
+                        // set LocalStorage here based on response;
+                    }
+                }
+                setUploading(true);
+                let urlPortada;
                 if (Object.keys(event).length !== 0) {
                     //update
+                    if (image !== undefined) {
+                        urlPortada = await uploadFile(image)
+                    }
                     await axiosPrivate.put('/events/edit_event', {
                         id: String(event.idEvent),
                         eventName: values.txtNombre,
                         eventDescription: values.txtDesc,
                         eventDate: values.date,
                         eventState: values.txtState,
-                        imgPortada: values.url
+                        imgPortada: image ? urlPortada : values.imgPortada
                     }).then((res) => {
+                        if (formik.values.url !== event.imgPortada) {
+                            var fileRef = ref(storage, event.imgPortada);
+                            deleteObject(fileRef).then(() => {
+                                console.log("File Deleted");
+                            }).catch((err) => {
+                                console.log(err);
+                            })
+                        }
                         setMensaje("Evento Guardado");
                         setAlerta("success");
                         setOpen(true);
@@ -99,12 +132,19 @@ const Form = ({ event }) => {
                             navigate(-1);
                         }, 2000);
                     }).catch((error) => {
+                        var fileRef = ref(storage, urlPortada);
+                        deleteObject(fileRef).then(() => {
+                            console.log("File Deleted");
+                        }).catch((err) => {
+                            console.log(err);
+                        })
                         setMensaje(error.response.data.message);
                         setAlerta("error");
                         setOpen(true);
                     });
                 } else {
                     //new
+                    urlPortada = await uploadFile(image);
                     const timeElapsed = Date.now();
                     const today = new Date(timeElapsed);
                     today.toDateString();
@@ -116,8 +156,9 @@ const Form = ({ event }) => {
                         eventPusblishedDate: today,
                         eventState: values.txtState,
                         idPublisher: auth.user.idUser,
-                        imgPortada: values.url
+                        imgPortada: urlPortada
                     }).then((res) => {
+                        setUploading(false);
                         setMensaje("Evento Guardado");
                         setAlerta("success");
                         setOpen(true);
@@ -125,6 +166,13 @@ const Form = ({ event }) => {
                             navigate(-1);
                         }, 2000);
                     }).catch((error) => {
+                        var fileRef = ref(storage, urlPortada);
+                        deleteObject(fileRef).then(() => {
+                            console.log("File Deleted");
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                        setUploading(false);
                         console.error(error.response.data);
                         setMensaje(error.response.data.message);
                         setAlerta('error');
@@ -132,14 +180,77 @@ const Form = ({ event }) => {
                     });
                 }
             } catch (err) {
+                setUploading(false);
                 console.log(err);
             }
         },
     });
 
+    function rand() {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (var i = 0; i < 8; i++) {
+            result += characters.charAt(Math.floor(Math.random() * 8));
+        }
+        return result;
+    }
+
+    const uploadFile = async (file) => {
+        let year = new Date().getFullYear();//curr year
+        const name = `Events/e${year}-${rand()}`;//rand name
+        const fileRef = ref(getStorage(), name);//storage ref
+        const imageFile = file;
+        //console.log('originalFile instanceof File: ', imageFile instanceof File); // true
+        //console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+
+        if (imageFile.size / 1048 < 300) {
+            try {
+                await uploadBytes(fileRef, imageFile).then(() => {
+                    setUploading(false);
+                }).catch((error) => {
+                    console.log(error);
+                    setAlerta("error");
+                    setMensaje("Error al subir la imagen")
+                    setOpen(true);
+                });
+            } catch (err) {
+                console.log(err);
+                setAlerta("error");
+                setMensaje("Error al subir la imagen")
+                setOpen(true);
+            }
+
+        } else {
+            const options = {
+                maxSizeMB: 0.2,
+                maxWidthOrHeight: 1920,
+                useWebWorker: true
+            }
+            try {
+                const compressedFile = await imageCompression(imageFile, options);
+                console.log('compressedFile instanceof File', compressedFile instanceof Blob); // true
+                console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+                await uploadBytes(fileRef, compressedFile).then(() => {
+                    setUploading(false);
+                }).catch((error) => {
+                    console.log(error);
+                    setAlerta("error");
+                    setMensaje("Error al subir la imagen")
+                    setOpen(true);
+                });
+
+            } catch (error) {
+                console.log(error);
+            }
+        }//else not < 300kb
+        return await getDownloadURL(fileRef);
+    }
+
     return (
         <>
             {event &&
+                !loading ? (
                 <div className='main_section'>
                     <ErrorBoundary >
                         <form className='form' onSubmit={formik.handleSubmit}>
@@ -253,7 +364,11 @@ const Form = ({ event }) => {
                         </form>
                         <SnackbarAlert open={open} handleClose={() => setOpen(false)} mensaje={mensaje} alert={alerta} />
                     </ErrorBoundary>
+                    <LoadingScreen loading={uploading} />
                 </div>
+            ) : (
+                <LoadingScreen loading={loading} />
+            )
             }
         </>
     )
