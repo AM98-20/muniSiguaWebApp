@@ -4,7 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import SamplePage from "./Views/Samples/SamplePage";
 //client side
 import HomePage from "./Views/Client/Home/HomePage";
-import AboutUsPage from "./Views/Client/AboutUs/AboutUsPage.jsx";
+import AboutUsPage from "./Views/Client/AboutUs/AboutUsPage";
+import ContactosPage from "./Views/Client/Contactos/ContactosPage";
 //admin side
 import DashboardPage from "./Views/Admin/DashboardPage";
 import UsersPage from "./Views/Admin/Users/UsersPage"
@@ -34,8 +35,8 @@ function App() {
       <Route path="/sample" element={<SamplePage />} />
       {/* client side */}
       <Route path="/" element={<HomePage />} />
-      <Route path="/AboutUs" element={<AboutUsPage />} />
-
+      <Route path="/AboutUs" element={<AboutUsPage />} caseSensitive />
+      <Route path="/Contactos" element={<ContactosPage />} caseSensitive />
       {/* admin side */}
       <Route path="/admin" element={<DashboardPage />} />
       <Route path="/admin/users" element={<UsersPage />} />

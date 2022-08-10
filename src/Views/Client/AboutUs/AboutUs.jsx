@@ -1,13 +1,31 @@
 import React from "react";
-import "./AboutUs.css";
+import "./AboutUs.css"; 
 
 const AboutUs = () => {
   return (
     <div className="main">
       <div class="wrapper">
-        <header class="backgroundTitle">Conocenos</header>
-        <aside class="aside aside-1">Aside 1</aside>
-        <aside class="aside aside-2">Aside 2</aside>
+        <div class="backgroundTitle">Conocenos</div>
+        <div class="aside">
+        <div class="first hero">
+  <img class="hero-profile-img" src="./about/misin.jpg" alt=""/>
+  <div class="hero-description-bk"></div>
+  <div class="hero-logo">
+  </div>
+  <div class="hero-description">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  </div>
+</div>
+<div class="second hero">
+  <img class="hero-profile-img" src="./about/vison.jpg" alt=""/>
+  <div class="hero-description-bk"></div>
+  <div class="hero-logo">
+  </div>
+  <div class="hero-description">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  </div>
+</div>
+        </div>
         <article class="mainArticle">
           <h1>Nuestra Historia</h1>
           <p className="paragraph">
@@ -62,7 +80,6 @@ const AboutUs = () => {
             esos tiempos casa de retiros para los sacerdotes de su parroquia.
           </p>
         </article>
-        <footer class="footer">Footer</footer>
       </div>
     </div>
   );
