@@ -15,7 +15,7 @@
 .red-header {
     flex-basis: 45%;
     height: 1rem;
-    background-color: #DE2058;
+    background-color: #db0020;
 }
 
 .green-header {
@@ -27,13 +27,13 @@
 .yellow-header {
     height: 1rem;
     flex-basis: 23%;
-    background-color: #DBC046;
+    background-color: #e6d755;
 }
 
 .blue-header {
     height: 1rem;
     flex-basis: 16%;
-    background-color: #3296D1;
+    background-color: #1976d2;
 }
 
 .header_bottom {
@@ -79,7 +79,7 @@
 
 .header_right button.login_button {
     cursor: pointer;
-    background-color: #DBC046;
+    background-color: #b5b5b5;
     border: none;
     height: 30px;
     padding: 0 1rem;
@@ -137,13 +137,13 @@
     }
 }
 
-@media (min-width: 480px) {
+@media (min-width: 600px) {
     .navbar {
         margin-top: 1.5rem;
     }
 }
 
-@media (max-width: 481px) {
+@media (max-width: 601px) {
     .full_header {
         width: calc(100vw - 1rem);
     }

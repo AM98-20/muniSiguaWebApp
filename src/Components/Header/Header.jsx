@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import './Header.css';
 import { Icon } from '@iconify/react';
-import Navbar from './Navbar/Navbar';
+import DrawerAppBar from './Navbar/Appbar';
 import { Button } from '@mui/material';
 import LoginDialog from '../Dialog/LoginDialog';
 import AuthContext from '../../Context/AuthProvider';
@@ -52,9 +52,7 @@ const Header = () => {
                 </div>
             </div>
             <div className='navbar'>
-                <div className='bloque'>
-                    <Navbar className="navbar" />
-                </div>
+                <DrawerAppBar className="navbar" />
             </div>
         </>
     )

@@ -78,10 +78,10 @@ const Form = ({ event, loading }) => {
     }
 
     useEffect(() => {
-        console.log(image);
+        //console.log(image);
         return () => {
         }
-    }, [image])
+    }, [])
 
     const formik = useFormik({
         initialValues: initial,
@@ -115,7 +115,7 @@ const Form = ({ event, loading }) => {
                         eventDescription: values.txtDesc,
                         eventDate: values.date,
                         eventState: values.txtState,
-                        imgPortada: image ? urlPortada : values.imgPortada
+                        imgPortada: image ? urlPortada : values.url
                     }).then((res) => {
                         if (formik.values.url !== event.imgPortada) {
                             var fileRef = ref(storage, event.imgPortada);

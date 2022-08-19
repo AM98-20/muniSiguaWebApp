@@ -1,0 +1,45 @@
+.appbar {
+    position: absolute !important;
+    top: 4.5rem !important;
+    width: 100vw !important;
+    height: 3rem !important;
+}
+
+.appbar-items {
+    min-height: 3rem !important;
+}
+
+@media (min-width: 600px) {
+    .appbar {
+        top: 6rem !important;
+        width: calc(80vw) !important;
+        right: calc(10vw) !important;
+        border-radius: 0.25rem !important;
+    }
+    .appbar-items {
+        display: flex !important;
+        justify-content: space-evenly;
+        padding: 0 !important;
+    }
+    .nav-items {
+        display: flex !important;
+        justify-content: space-evenly !important;
+    }
+    .nav-item {
+        height: 3rem;
+        width: 20vw;
+        justify-content: space-evenly !important;
+    }
+    .nav-item:hover {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+    }
+    .comp-menu {
+        background-color: #1976d2;
+        border-radius: 0.25rem;
+        width: 20vw;
+        color: white;
+    }
+    .icon-appbar {
+        transition: all 0.5s;
+    }
+}
