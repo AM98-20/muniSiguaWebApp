@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Form.css';
 import { TextField, Autocomplete, Button, Switch, Typography, Stack } from '@mui/material';
 import { Icon } from '@iconify/react';
@@ -6,8 +6,12 @@ import { Icon } from '@iconify/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
 import { NavLink, useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+
 import { axiosPrivate } from '../../../api/axios';
 import SnackbarAlert from '../../../Components/Snackbar/Snackbar';
+import LoadingScreen from '../../../Components/Dialog/LoadingScreen';
+import AuthContext from '../../../Context/AuthProvider';
 
 function createData(id, label) {
     return { label, id };
@@ -20,9 +24,9 @@ const options = [
     createData(4, 'Informática'),
 ];
 
-const Form = ({ user }) => {
+const Form = ({ user, loading }) => {
     const navigate = useNavigate();
-
+    const {auth, setAuth} = useContext(AuthContext);
     const [open, setOpen] = useState(false);
     const [mensaje, setMensaje] = useState('');
     const [alerta, setAlerta] = useState('');
@@ -113,6 +117,19 @@ const Form = ({ user }) => {
         onSubmit: async (values) => {
             //alert(JSON.stringify(values, null, 2));
             try {
+                if (auth.accessToken) {
+                    let token = auth.accessToken;
+                    const { exp } = jwtDecode(token)
+                    // Refresh the token a minute early to avoid latency issues
+                    const expirationTime = (exp * 1000) - 60000
+                    if (Date.now() >= expirationTime) {
+                        setAuth({});
+                        localStorage.clear();
+                        alert('La sesion ya caduco. Se cerrara la sesión actual.')
+                        navigate('/');
+                        // set LocalStorage here based on response;
+                    }
+                }
                 let boolState;
                 if (values.state) {
                     boolState = 1;
@@ -153,7 +170,12 @@ const Form = ({ user }) => {
                         idPost: String(values.idPuesto),
                         userState: boolState
                     }).then((res) => {
-                        console.log(res);
+                        setMensaje("Usuario Guardado");
+                        setAlerta("success");
+                        setOpen(true);
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 2000);
                     }).catch((error) => {
                         console.error(error.response.data);
                         setMensaje(error.response.data.result);
@@ -170,6 +192,7 @@ const Form = ({ user }) => {
     return (
         <>
             {user &&
+                !loading ? (
                 <div className='main_section'>
                     <form className='form' onSubmit={formik.handleSubmit}>
                         <div className="input-field_signup child">
@@ -299,6 +322,9 @@ const Form = ({ user }) => {
                     </form>
                     <SnackbarAlert open={open} handleClose={() => setOpen(false)} mensaje={mensaje} alert={alerta} />
                 </div>
+                ) : (
+                    <LoadingScreen loading={loading} />
+                )
             }
         </>
     )

@@ -29,19 +29,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
+const Dashboard = ({ events }) => {
 
-const rows = [
-    createData('Frozen yoghurt', 159),
-    createData('Ice cream sandwich', 237),
-    createData('Eclair', 262),
-    createData('Cupcake', 305),
-    createData('Gingerbread', 356),
-];
+    let rows = [];
 
-const Dashboard = () => {
+    for (let j = 0; j < events.length; j++) {
+        rows.push(events[j]);
+    }
 
     return (
         <div className='mid'>
@@ -55,11 +49,11 @@ const Dashboard = () => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <StyledTableRow key={row.name}>
+                            <StyledTableRow key={row.idEvent}>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.name}
+                                    {row.eventName}
                                 </StyledTableCell>
-                                <StyledTableCell align="left">{row.calories}</StyledTableCell>
+                                <StyledTableCell align="left">{row.eventDate}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

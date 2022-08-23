@@ -20,7 +20,7 @@ const UserForm = () => {
                 setLoading(false);
             }
             loadData();
-        }else{
+        } else {
             setLoading(false);
         }
         return () => {
@@ -32,12 +32,17 @@ const UserForm = () => {
     return (
         <>
             {
-                loading ? (<AdminPage></AdminPage>) : (
+                !loading ? (
+                <AdminPage
+                    header={<HeaderNav Title="Formulario Usuario" />}
+                >
+                    <Form user={user} loading={loading} />
+                </AdminPage>
+                ) : (
                     <AdminPage
-                        header={<HeaderNav Title="Formulario Usuario" />}
-                    >
-                        <Form user={user} />
-                    </AdminPage>
+                    header={<HeaderNav Title="Formulario Usuario" />}
+                >
+                </AdminPage>
                 )
             }
         </>

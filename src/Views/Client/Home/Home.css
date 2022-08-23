@@ -1,7 +1,56 @@
 .heroPanel {
-    z-index: 10;
-    margin: 0 -2rem;
-    margin-top: 0.2rem;
-    height: calc(100vh - 7rem);
-    background-color: bisque;
+    z-index: 0;
+    margin: 2rem -2rem;
+}
+
+.displayPanel {
+    position: relative;
+}
+
+.hero-img {
+    width: calc(100vw);
+    filter: brightness(50%);
+}
+
+.hero-button {
+    position: absolute !important;
+    top: 75% !important;
+    left: 35% !important;
+    transform: translate(-50%, -50%) !important;
+    -ms-transform: translate(-50%, -50%) !important;
+    color: #e6d755 !important;
+    border-color: #e6d755 !important;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.icon-back {
+    transition: all ease-in-out 0.5s;
+    padding: 1.5rem;
+    background-color: #3AA94D;
+    border-radius: 50%;
+}
+
+.cards {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+.card-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 1rem;
+    box-shadow: none;
+    flex: 1 0 100%;
+}
+
+.card-button:hover {
+    color: white;
+}
+
+.card-content {
+    color: black !important;
 }

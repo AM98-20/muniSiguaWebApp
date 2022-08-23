@@ -57,7 +57,7 @@ const News = ({ news }) => {
 
     const editIcon = (id) => (
         <div>
-            <NavLink to={id}>
+            <NavLink to={'' + id}>
                 <Tooltip title='Editar'>
                     <Icon className='icons icons-a' icon="eva:edit-fill" height={"1.2rem"} />
                 </Tooltip>
@@ -76,7 +76,7 @@ const News = ({ news }) => {
 
     return (
         <div className='usr_main'>
-            <NavLink className="link-nav" to='0'>
+            <NavLink className="link-nav" to='new'>
                 <Button className='btnAdd' variant="contained" color="success">Nuevo</Button>
             </NavLink>
             <div className='usr_mid'>
@@ -86,7 +86,9 @@ const News = ({ news }) => {
                             <TableRow>
                                 <StyledTableCell align='right'></StyledTableCell>
                                 <StyledTableCell></StyledTableCell>
-                                <StyledTableCell>Nombre Usuario</StyledTableCell>
+                                <StyledTableCell>Titular</StyledTableCell>
+                                <StyledTableCell>Descripción</StyledTableCell>
+                                <StyledTableCell>Editor</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -101,6 +103,12 @@ const News = ({ news }) => {
                                         </StyledTableCell>
                                         <StyledTableCell component="th" scope="row">
                                             {row.newsName}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.newsDesc}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.user.name + ' ' + row.user.surname}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 ))
