@@ -44,6 +44,14 @@
     justify-content: space-between;
 }
 
+.header_bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0rem 3rem;
+    justify-content: space-between;
+}
+
 .header_left {
     display: flex;
     align-items: center;
@@ -114,15 +122,6 @@
     z-index: 1;
 }
 
-.bloque {
-    width: 80vw;
-    min-height: 2.5rem;
-    margin-top: 4.5rem;
-    height: fit-content;
-    background-color: #3296D1;
-    box-shadow: 0 6px 5px rgba(0, 0, 0, 0.25);
-}
-
 .nav {
     display: flex;
     align-items: center;
@@ -158,8 +157,5 @@
     }
     .header_left img {
         height: 3rem;
-    }
-    .bloque {
-        width: 100vw;
     }
 }

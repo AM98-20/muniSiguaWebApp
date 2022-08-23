@@ -9,6 +9,29 @@
     min-height: 3rem !important;
 }
 
+.navlink {
+    width: 100%;
+    color: black;
+}
+
+.navlink-active {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.accordion-item {
+    width: 100%;
+    box-shadow: none !important;
+    text-align: center !important;
+    transition: all 1s ease-in-out !important;
+}
+
+.accordion-content {
+    max-height: 1rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 3rem !important;
+}
+
 @media (min-width: 600px) {
     .appbar {
         top: 6rem !important;
@@ -26,11 +49,15 @@
         justify-content: space-evenly !important;
     }
     .nav-item {
+        color: white !important;
         height: 3rem;
         width: 20vw;
         justify-content: space-evenly !important;
     }
     .nav-item:hover {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+    }
+    .activated {
         background-color: rgba(0, 0, 0, 0.1) !important;
     }
     .comp-menu {

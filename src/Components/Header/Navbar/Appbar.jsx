@@ -4,15 +4,13 @@ import { AppBar, Box, Divider, Drawer } from '@mui/material';
 import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Accordion, AccordionSummary } from '@mui/material';
 import { MenuItem, MenuList, Popper, ClickAwayListener, Grow, Paper } from '@mui/material';
 import { Icon } from '@iconify/react';
 
 import './Appbar.css';
 import { NavLink } from 'react-router-dom';
 const drawerWidth = 240;
-const navItems = ['Inicio', 'Alcaldia', 'Noticias', 'Cultura'];
-
 function DrawerAppBar(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -46,7 +44,11 @@ function DrawerAppBar(props) {
     //alt
     const [openAlt, setOpenAlt] = React.useState(false);
     const anchorRefAlt = React.useRef(null);
+    const [expanded, setExpanded] = React.useState('');
 
+    const handleChange = (panel) => (event, newExpanded) => {
+        setExpanded(newExpanded ? panel : false);
+    };
     const handleToggleAlt = () => {
         setOpenAlt((prevOpenAlt) => !prevOpenAlt);
     };
@@ -88,19 +90,83 @@ function DrawerAppBar(props) {
     };
 
     const drawer = (
-        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+        <Box sx={{ textAlign: 'center' }}>
             <Typography variant="h6" sx={{ my: 2 }}>
                 MUI
             </Typography>
             <Divider />
             <List>
-                {navItems.map((item) => (
-                    <ListItem key={item} disablePadding>
+                <ListItem disablePadding>
+                    <NavLink to={'/'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
                         <ListItemButton sx={{ textAlign: 'center' }}>
-                            <ListItemText primary={item} />
+                            <ListItemText primary={'Inicio'} />
                         </ListItemButton>
-                    </ListItem>
-                ))}
+                    </NavLink>
+                </ListItem>
+                <ListItem disablePadding>
+                    <Accordion className='accordion-item' expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+                        <AccordionSummary className='accordion-content' aria-controls="panel1d-content" id="panel1d-header">
+                            <Typography>Alcaldia</Typography>
+                        </AccordionSummary>
+                        <Divider />
+                        <List>
+                            <ListItem disablePadding>
+                                <NavLink to={'/sample'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                                    <ListItemButton sx={{ textAlign: 'center' }}>
+                                        <ListItemText primary={'Organigrama'} />
+                                    </ListItemButton>
+                                </NavLink>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <NavLink to={'/sample'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                                    <ListItemButton sx={{ textAlign: 'center' }}>
+                                        <ListItemText primary={'Departamentos'} />
+                                    </ListItemButton>
+                                </NavLink>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <NavLink to={'/sample'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                                    <ListItemButton sx={{ textAlign: 'center' }}>
+                                        <ListItemText primary={'Portal de Transparencia'} />
+                                    </ListItemButton>
+                                </NavLink>
+                            </ListItem>
+                        </List>
+                        <Divider />
+                    </Accordion>
+                </ListItem>
+                <ListItem disablePadding>
+                    <NavLink to={'/sample'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                        <ListItemButton sx={{ textAlign: 'center' }}>
+                            <ListItemText primary={'Noticias'} />
+                        </ListItemButton>
+                    </NavLink>
+                </ListItem>
+                <ListItem disablePadding>
+                    <Accordion className='accordion-item' expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+                        <AccordionSummary className='accordion-content' aria-controls="panel2d-content" id="panel2d-header">
+                            <Typography>Cultura</Typography>
+                        </AccordionSummary>
+                        <Divider />
+                        <List>
+                            <ListItem disablePadding>
+                                <NavLink to={'/sample'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                                    <ListItemButton sx={{ textAlign: 'center' }}>
+                                        <ListItemText primary={'Eventos'} />
+                                    </ListItemButton>
+                                </NavLink>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <NavLink to={'/sample'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                                    <ListItemButton sx={{ textAlign: 'center' }}>
+                                        <ListItemText primary={'Cultura'} />
+                                    </ListItemButton>
+                                </NavLink>
+                            </ListItem>
+                        </List>
+                        <Divider />
+                    </Accordion>
+                </ListItem>
             </List>
         </Box>
     );
@@ -121,7 +187,7 @@ function DrawerAppBar(props) {
                         <Icon icon="charm:menu-hamburger" />
                     </IconButton>
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }} className='nav-items' >
-                        <NavLink to="" className='nav-item'>
+                        <NavLink to="/" end className={({ isActive }) => (isActive ? "activated" : "") + ' nav-item'}>
                             <Button
                                 sx={{ color: '#fff' }}
                                 className='nav-item'
@@ -130,7 +196,7 @@ function DrawerAppBar(props) {
                             </Button>
                         </NavLink>
                         <Button
-                            endIcon={<Icon className='icon-appbar' style={open ? {transform: 'rotate(180deg)'} : {transform: 'rotate(0deg)'}} icon="ep:arrow-down-bold" />}
+                            endIcon={<Icon className='icon-appbar' style={open ? { transform: 'rotate(180deg)' } : { transform: 'rotate(0deg)' }} icon="ep:arrow-down-bold" />}
                             sx={{ color: '#fff' }}
                             className='nav-item'
                             ref={anchorRef}
@@ -167,15 +233,20 @@ function DrawerAppBar(props) {
                                                 aria-labelledby="composition-button"
                                                 onKeyDown={handleListKeyDown}
                                             >
-                                                <MenuItem className='nav-item'  onClick={handleClose}>Departamentos</MenuItem>
-                                                <MenuItem className='nav-item'  onClick={handleClose}>Organigrama</MenuItem>
+                                                <NavLink to={'/sample'} end className={({ isActive }) => (isActive ? "activated" : "") + ' nav-item'}>
+                                                    <MenuItem className='nav-item' onClick={handleClose}>Departamentos</MenuItem>
+                                                </NavLink>
+                                                <MenuItem className='nav-item' onClick={handleClose}>Organigrama</MenuItem>
+                                                <NavLink to={'/sample'} end className={({ isActive }) => (isActive ? "activated" : "") + ' nav-item'}>
+                                                    <MenuItem className='nav-item' onClick={handleClose}>Portal de Transparencia</MenuItem>
+                                                </NavLink>
                                             </MenuList>
                                         </ClickAwayListener>
                                     </Paper>
                                 </Grow>
                             )}
                         </Popper>
-                        <NavLink to="" className='nav-item'>
+                        <NavLink to="/sample" end className={({ isActive }) => (isActive ? "activated" : "") + ' nav-item'}>
                             <Button
                                 sx={{ color: '#fff' }}
                                 className='nav-item'
@@ -184,7 +255,7 @@ function DrawerAppBar(props) {
                             </Button>
                         </NavLink>
                         <Button
-                        endIcon={<Icon className='icon-appbar' style={openAlt ? {transform: 'rotate(180deg)'} : {transform: 'rotate(0deg)'}} icon="ep:arrow-down-bold" />}
+                            endIcon={<Icon className='icon-appbar' style={openAlt ? { transform: 'rotate(180deg)' } : { transform: 'rotate(0deg)' }} icon="ep:arrow-down-bold" />}
                             sx={{ color: '#fff' }}
                             className='nav-item'
                             ref={anchorRefAlt}
@@ -221,7 +292,7 @@ function DrawerAppBar(props) {
                                                 aria-labelledby="composition-button"
                                                 onKeyDown={handleListKeyDownAlt}
                                             >
-                                                <MenuItem className='nav-item' onClick={handleCloseAlt}>Calendario</MenuItem>
+                                                <MenuItem className='nav-item' onClick={handleCloseAlt}>Eventos</MenuItem>
                                                 <MenuItem className='nav-item' onClick={handleCloseAlt}>Cultura</MenuItem>
                                             </MenuList>
                                         </ClickAwayListener>

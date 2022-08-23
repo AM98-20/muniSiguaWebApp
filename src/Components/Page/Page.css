@@ -4,6 +4,7 @@
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .page_container main {
@@ -28,6 +29,7 @@
 }
 
 .page_header {
+    z-index: 100;
     position: fixed;
     background-color: #fff;
     display: flex;
