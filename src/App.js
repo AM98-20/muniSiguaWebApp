@@ -35,8 +35,8 @@ function App() {
       <Route path="/sample" element={<SamplePage />} />
       {/* client side */}
       <Route path="/" element={<HomePage />} />
-      <Route path="/AboutUs" element={<AboutUsPage />} caseSensitive />
-      <Route path="/Contactos" element={<ContactosPage />} caseSensitive />
+      <Route path="/cultura" element={<AboutUsPage />} caseSensitive />
+      <Route path="/contactos" element={<ContactosPage />} caseSensitive />
       {/* admin side */}
       <Route path="/admin" element={<DashboardPage />} />
       <Route path="/admin/users" element={<UsersPage />} />

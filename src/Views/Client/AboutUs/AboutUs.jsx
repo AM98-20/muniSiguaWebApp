@@ -5,7 +5,7 @@ const AboutUs = () => {
   return (
     <div className="main">
       <div class="wrapper">
-        <div class="backgroundTitle">Conocenos</div>
+        <div class="backgroundTitle">Cultura</div>
         <div class="aside">
         <div class="first hero">
   <img class="hero-profile-img" src="./about/misin.jpg" alt=""/>
