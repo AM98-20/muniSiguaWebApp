@@ -125,7 +125,7 @@ function DrawerAppBar(props) {
                                 </NavLink>
                             </ListItem>
                             <ListItem disablePadding>
-                                <NavLink to={'/sample'} className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                                <NavLink to='https://portalunico.iaip.gob.hn/portal/index.php?portal=65' className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
                                     <ListItemButton sx={{ textAlign: 'center' }}>
                                         <ListItemText primary={'Portal de Transparencia'} />
                                     </ListItemButton>
@@ -237,9 +237,10 @@ function DrawerAppBar(props) {
                                                     <MenuItem className='nav-item' onClick={handleClose}>Departamentos</MenuItem>
                                                 </NavLink>
                                                 <MenuItem className='nav-item' onClick={handleClose}>Organigrama</MenuItem>
-                                                <NavLink to={'/sample'} end className={({ isActive }) => (isActive ? "activated" : "") + ' nav-item'}>
+                                                <a target="_blank" href="https://portalunico.iaip.gob.hn/portal/index.php?portal=65" rel="noreferrer">
                                                     <MenuItem className='nav-item' onClick={handleClose}>Portal de Transparencia</MenuItem>
-                                                </NavLink>
+
+                                                </a>
                                             </MenuList>
                                         </ClickAwayListener>
                                     </Paper>

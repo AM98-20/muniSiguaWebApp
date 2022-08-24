@@ -5,6 +5,7 @@
     min-height: 100vh;
     flex-direction: column;
     overflow-x: hidden;
+    margin-bottom: 2rem;
 }
 
 .page_container main {
