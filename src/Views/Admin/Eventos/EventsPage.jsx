@@ -14,7 +14,6 @@ const EventsPage = () => {
       const res = await axios.get('/events/all_events');
       setEvents(res.data.events);
       setLoading(false);
-      console.log(res.data.events);
     }
     loadData();
 

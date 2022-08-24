@@ -32,11 +32,16 @@ const EventForm = () => {
     return (
         <>
             {
-                loading ? (<AdminPage />) : (
+                loading ? (
                     <AdminPage
                         header={<HeaderNav Title="Formulario Evento" />}
                     >
-                        <Form event={event} />
+                    </AdminPage>
+                ) : (
+                    <AdminPage
+                        header={<HeaderNav Title="Formulario Evento" />}
+                    >
+                        <Form event={event} loading={loading} />
                     </AdminPage>
                 )
             }

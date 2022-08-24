@@ -80,6 +80,12 @@ const LoginDialog = ({ open, handleClose }) => {
         setOpenAlert(true);
     }
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            formik.handleSubmit();
+        }
+    }
+
     return (
         <div>
             <Dialog
@@ -150,6 +156,7 @@ const LoginDialog = ({ open, handleClose }) => {
                                     onChange={formik.handleChange}
                                     color={formik.errors.txtPassword ? 'error' : 'success'}
                                     error={formik.touched.txtPassword && Boolean(formik.errors.txtPassword)}
+                                    onKeyPress={handleKeyPress}
                                 />
                                 <DialogActions>
                                     <Button variant='contained' color='error' onClick={handleOnClose}>Cancelar</Button>

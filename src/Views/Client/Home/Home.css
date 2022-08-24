@@ -1,7 +1,75 @@
 .heroPanel {
-    z-index: 10;
+    z-index: 0;
+    margin: 0rem -2rem 2rem -2rem;
+}
+
+.displayPanel {
+    position: relative;
+}
+
+.hero-img {
+    width: calc(100vw);
+    filter: brightness(50%);
+}
+
+.hero-main {
+    position: absolute !important;
+    top: 55% !important;
+    left: 35% !important;
+    transform: translate(-50%, -50%) !important;
+    -ms-transform: translate(-50%, -50%) !important;
+}
+
+.hero-text {
+    color: white;
+}
+
+.hero-button {
+    color: #e6d755 !important;
+    border-color: #e6d755 !important;
+    cursor: pointer !important;
+    border-radius: 5px;
+}
+
+.icon-back {
+    transition: all ease-in-out 0.5s;
+    padding: 1.5rem;
+    background-color: #3AA94D;
+    border-radius: 50%;
+}
+
+.cards {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+.card-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 1rem;
+    box-shadow: none;
+    flex: 1 0 100%;
+}
+
+.card-button:hover {
+    color: white;
+}
+
+.card-content {
+    color: black !important;
+}
+
+.news-calendar {
+    margin: 2rem -2rem;
+}
+
+.map {
     margin: 0 -2rem;
-    margin-top: 0.2rem;
-    height: calc(100vh - 7rem);
-    background-color: bisque;
+    margin-bottom: 2rem;
+    height: 6rem;
+    width: 100vw;
+    background-color: #3AA94D;
 }
