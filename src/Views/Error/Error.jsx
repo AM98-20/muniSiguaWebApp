@@ -4,7 +4,7 @@ const Error = () => {
 
     return (
         <div className='main'>
-            ERROR PAGE
+            ERROR PAGE (404)
         </div>
     )
 }

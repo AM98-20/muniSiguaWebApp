@@ -125,11 +125,11 @@ function DrawerAppBar(props) {
                                 </NavLink>
                             </ListItem>
                             <ListItem disablePadding>
-                                <NavLink to='https://portalunico.iaip.gob.hn/portal/index.php?portal=65' className={({ isActive }) => (isActive ? "navlink-active" : "") + ' navlink'}>
+                                <a href='https://portalunico.iaip.gob.hn/portal/index.php?portal=65' target="_blank" rel='noreferrer' className='navlink'>
                                     <ListItemButton sx={{ textAlign: 'center' }}>
-                                        <ListItemText primary={'Portal de Transparencia'} />
+                                        <ListItemText  primary={'Portal de Transparencia'} />
                                     </ListItemButton>
-                                </NavLink>
+                                </a>
                             </ListItem>
                         </List>
                         <Divider />
@@ -237,9 +237,8 @@ function DrawerAppBar(props) {
                                                     <MenuItem className='nav-item' onClick={handleClose}>Departamentos</MenuItem>
                                                 </NavLink>
                                                 <MenuItem className='nav-item' onClick={handleClose}>Organigrama</MenuItem>
-                                                <a target="_blank" href="https://portalunico.iaip.gob.hn/portal/index.php?portal=65" rel="noreferrer">
-                                                    <MenuItem className='nav-item' onClick={handleClose}>Portal de Transparencia</MenuItem>
-
+                                                <a href='https://portalunico.iaip.gob.hn/portal/index.php?portal=65' target="_blank" rel='noreferrer'>
+                                                    <MenuItem className='nav-item special' onClick={handleClose}>Portal de Transparencia</MenuItem>
                                                 </a>
                                             </MenuList>
                                         </ClickAwayListener>
@@ -294,7 +293,7 @@ function DrawerAppBar(props) {
                                                 onKeyDown={handleListKeyDownAlt}
                                             >
                                                 <MenuItem className='nav-item' onClick={handleCloseAlt}>Eventos</MenuItem>
-                                                <MenuItem className='nav-item' onClick={handleCloseAlt}>Cultura</MenuItem>
+                                                <MenuItem className='nav-item special' onClick={handleCloseAlt}>Cultura y Turismo</MenuItem>
                                             </MenuList>
                                         </ClickAwayListener>
                                     </Paper>

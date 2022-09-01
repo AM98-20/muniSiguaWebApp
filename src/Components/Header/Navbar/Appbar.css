@@ -69,4 +69,9 @@
     .icon-appbar {
         transition: all 0.5s;
     }
+    .special {
+        overflow: hidden;
+        white-space: break-spaces !important;
+        text-align: center;
+    }
 }
